@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SAM Mail Agent — The Science of Winning Deals, by Samora</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --ink:#1C1917;--dusk:#44403C;--ash:#78716C;--fog:#D6CFC4;
+      --iv:#FAF8F4;--paper:#F3EFE8;--smoke:#EDE9E1;
+      --gold:#A0752A;--gl:#C9973E;--gpl:#E8C97A;--cream:#F7F0E0;
+      --dark:#18160F;--dc:#231F17;--dr:#3A3428;
+      --green:#4ADE80;--red:#EF4444;
+      --li:#0A66C2;--em:#EA4335;--wa:#25D366;--cal:#8B5CF6;
+      --maxw:1140px;--ease:cubic-bezier(.25,.46,.45,.94)
+    }
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--dark);color:var(--fog);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.65;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+    strong{font-weight:500;color:var(--cream)}
+    em{font-style:italic}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 2rem}
+    h1,h2,h3,h4{font-family:'EB Garamond',serif;line-height:1.15}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .75s var(--ease),transform .75s var(--ease)}
+    .reveal.visible{opacity:1;transform:none}
+    .label{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem}
+    .sec-h{font-size:clamp(2rem,4vw,3.2rem);font-weight:500;color:var(--iv);margin-bottom:1.25rem}
+    .sec-p{font-size:1.05rem;color:var(--fog);line-height:1.8;margin-bottom:2.5rem;max-width:580px}
+    .btn{display:inline-block;padding:.875rem 2rem;font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:500;cursor:pointer;border:none;border-radius:2px;transition:all .3s var(--ease)}
+    .btn--gold{background:var(--gold);color:var(--dark)}
+    .btn--gold:hover{background:var(--gl);transform:translateY(-1px)}
+    .btn--ghost{background:transparent;color:var(--fog);border:1px solid var(--dr)}
+    .btn--ghost:hover{border-color:var(--gold);color:var(--gl)}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.65)}}
+    @keyframes fadeSlide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(24,22,15,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--dr)}
+    .nav-in{max-width:var(--maxw);margin:0 auto;padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between}
+    .nav-brand{display:flex;align-items:center;gap:.75rem}
+    .nav-logo{font-family:'EB Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--iv);letter-spacing:.1em}
+    .nav-tag{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;padding:.18rem .45rem;border:1px solid rgba(160,117,42,.3);border-radius:2px}
+    .nav-back{font-size:.8rem;color:var(--ash);transition:color .2s}
+    .nav-back:hover{color:var(--gl)}
+    .nav-cta{padding:.45rem 1.2rem;background:var(--gold);color:var(--dark);font-size:.8rem;font-weight:500;border-radius:2px;transition:background .2s}
+    .nav-cta:hover{background:var(--gl)}
+
+    /* ── HERO ── */
+    .hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:6rem 0 5rem}
+    .hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+    .hero-glow{position:absolute;top:15%;right:-8%;width:700px;height:700px;background:radial-gradient(circle,rgba(160,117,42,.06),transparent 65%);border-radius:50%;pointer-events:none}
+    .hero-glow2{position:absolute;bottom:5%;left:-5%;width:500px;height:500px;background:radial-gradient(circle,rgba(139,92,246,.04),transparent 65%);border-radius:50%;pointer-events:none}
+    .hero-content{position:relative;z-index:2;max-width:720px}
+    .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem}
+    .hero-h{font-size:clamp(2.8rem,5.5vw,4.6rem);color:var(--iv);margin-bottom:1.5rem}
+    .hero-h em{color:var(--gl)}
+    .hero-sub{font-size:1.15rem;color:var(--fog);line-height:1.8;margin-bottom:2.5rem;max-width:600px}
+    .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem}
+    .hero-sources{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+    .src-label{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--ash);letter-spacing:.1em;margin-right:.25rem}
+    .src-badge{display:flex;align-items:center;gap:.35rem;padding:.28rem .65rem;font-family:'DM Mono',monospace;font-size:.62rem;border-radius:2px;border:1px solid}
+    .src-badge--em{background:rgba(234,67,53,.1);color:#EA4335;border-color:rgba(234,67,53,.2)}
+    .src-badge--cal{background:rgba(139,92,246,.1);color:#A78BFA;border-color:rgba(139,92,246,.2)}
+    .src-badge--note{background:rgba(160,117,42,.1);color:var(--gl);border-color:rgba(160,117,42,.2)}
+    .src-badge--li{background:rgba(10,102,194,.1);color:#5BA4CF;border-color:rgba(10,102,194,.2)}
+    .src-badge--wa{background:rgba(37,211,102,.1);color:#25D366;border-color:rgba(37,211,102,.2)}
+
+    /* ── STAT BAND ── */
+    .stat-band{background:#0A0908;border-top:1px solid var(--dr);border-bottom:1px solid var(--dr);padding:0}
+    .stat-band-inner{display:flex;max-width:var(--maxw);margin:0 auto}
+    .sb-item{flex:1;padding:2rem 1.5rem;border-right:1px solid var(--dr);text-align:center}
+    .sb-item:last-child{border-right:none}
+    .sb-n{font-family:'EB Garamond',serif;font-size:2.6rem;font-weight:700;color:var(--gl);line-height:1;margin-bottom:.3rem}
+    .sb-l{font-size:.82rem;color:var(--fog);margin-bottom:.2rem}
+    .sb-s{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--ash);letter-spacing:.06em}
+
+    /* ── INSIGHT SECTIONS ── */
+    .insight-sec{padding:6rem 0}
+    .insight-sec--alt{background:#0D0B08}
+    .insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+    .insight-grid--rev{direction:rtl}
+    .insight-grid--rev > *{direction:ltr}
+
+    /* ── MAIL SCIENCE ── */
+    .mail-dashboard{background:var(--dc);border:1px solid var(--dr);overflow:hidden;font-family:'DM Mono',monospace}
+    .mdb-bar{display:flex;align-items:center;gap:1rem;padding:.55rem 1rem;background:#0A0908;border-bottom:1px solid var(--dr)}
+    .mdb-logo{font-family:'EB Garamond',serif;font-size:.9rem;font-weight:600;color:var(--gl);letter-spacing:.08em}
+    .mdb-title{font-size:.6rem;color:var(--ash);letter-spacing:.14em;flex:1}
+    .mdb-live{display:flex;align-items:center;gap:.3rem;font-size:.6rem;color:var(--green)}
+    .mdb-live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+
+    /* Open rate tracker */
+    .open-tracker{padding:1rem}
+    .ot-head{font-size:.6rem;color:var(--gold);letter-spacing:.15em;margin-bottom:.75rem}
+    .ot-account{display:flex;flex-direction:column;gap:.3rem;padding:.65rem .75rem;background:var(--dark);border-left:2px solid var(--gold);margin-bottom:.5rem}
+    .ot-row1{display:flex;justify-content:space-between;align-items:center}
+    .ot-co{font-size:.82rem;color:var(--cream);font-family:'DM Sans',sans-serif}
+    .ot-signal{font-size:.6rem;padding:.12rem .4rem;border-radius:2px}
+    .ot-signal--hot{background:rgba(74,222,128,.12);color:var(--green)}
+    .ot-signal--warm{background:rgba(201,151,62,.1);color:var(--gl)}
+    .ot-signal--cold{background:rgba(239,68,68,.1);color:var(--red)}
+    .ot-opens{display:flex;gap:.4rem;align-items:center;margin:.25rem 0}
+    .ot-dot{width:8px;height:8px;border-radius:50%}
+    .ot-dot--open{background:var(--green)}
+    .ot-dot--no{background:var(--dr)}
+    .ot-meta{font-size:.68rem;color:var(--ash);font-family:'DM Sans',sans-serif}
+    .ot-insight{font-size:.72rem;color:var(--gl);font-style:italic;margin-top:.2rem}
+
+    /* Proposal science */
+    .proposal-card{padding:1rem;border-top:1px solid var(--dr)}
+    .pc-head{font-size:.6rem;color:var(--gold);letter-spacing:.15em;margin-bottom:.75rem}
+    .pc-account{background:var(--dark);padding:.75rem;margin-bottom:.5rem;border-left:2px solid var(--gl)}
+    .pc-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.3rem}
+    .pc-co{font-size:.82rem;color:var(--cream);font-family:'DM Sans',sans-serif;font-weight:500}
+    .pc-score-wrap{text-align:right}
+    .pc-score{font-family:'EB Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--green);line-height:1}
+    .pc-score-lbl{font-size:.56rem;color:var(--ash)}
+    .pc-opens{font-size:.7rem;color:var(--fog);margin-bottom:.25rem}
+    .pc-pattern{font-size:.7rem;color:var(--gl);font-style:italic}
+    .pc-warning{font-size:.7rem;color:var(--red);font-style:italic;border-left:2px solid var(--red);padding-left:.5rem}
+
+    /* ── CALENDAR INTELLIGENCE ── */
+    .cal-dashboard{background:var(--dc);border:1px solid var(--dr);overflow:hidden;font-family:'DM Mono',monospace}
+    .cal-bar{display:flex;align-items:center;gap:1rem;padding:.55rem 1rem;background:#0A0908;border-bottom:1px solid var(--dr)}
+    .cal-icon{color:#A78BFA;font-size:.9rem}
+    .cal-title{font-size:.6rem;color:var(--ash);letter-spacing:.14em;flex:1}
+    .cal-week{padding:.75rem 1rem;border-bottom:1px solid var(--dr)}
+    .cw-label{font-size:.58rem;color:var(--ash);letter-spacing:.12em;margin-bottom:.5rem}
+    .cw-days{display:grid;grid-template-columns:repeat(5,1fr);gap:.3rem}
+    .cw-day{background:var(--dark);padding:.35rem .25rem;text-align:center;border-radius:2px}
+    .cw-day-name{font-size:.56rem;color:var(--ash)}
+    .cw-day-meetings{font-family:'EB Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--gl);line-height:1.2}
+    .cw-day-type{font-size:.54rem;color:var(--ash)}
+    .cw-day--hot{border-top:2px solid var(--green)}
+    .cw-day--warn{border-top:2px solid var(--red)}
+    .cal-insights{display:flex;flex-direction:column;gap:0}
+    .ci-item{display:flex;gap:.6rem;align-items:flex-start;padding:.65rem 1rem;border-bottom:1px solid rgba(255,255,255,.03)}
+    .ci-icon{font-size:.85rem;flex-shrink:0;margin-top:.04rem}
+    .ci-body{flex:1}
+    .ci-head{font-size:.75rem;color:var(--cream);font-family:'DM Sans',sans-serif;margin-bottom:.15rem}
+    .ci-detail{font-size:.7rem;color:var(--ash);line-height:1.45}
+    .ci-action{font-size:.68rem;color:var(--gl);font-style:italic;margin-top:.15rem}
+
+    /* ── NOTETAKER INTELLIGENCE ── */
+    .note-dashboard{background:var(--dc);border:1px solid var(--dr);overflow:hidden;font-family:'DM Mono',monospace}
+    .note-bar{display:flex;align-items:center;gap:.6rem;padding:.55rem 1rem;background:#0A0908;border-bottom:1px solid var(--dr)}
+    .note-icon{color:var(--gl);font-size:.9rem}
+    .note-title{font-size:.6rem;color:var(--ash);letter-spacing:.14em;flex:1}
+    .note-meeting{padding:.75rem 1rem;border-bottom:1px solid var(--dr)}
+    .nm-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+    .nm-name{font-size:.78rem;color:var(--cream);font-family:'DM Sans',sans-serif}
+    .nm-time{font-size:.6rem;color:var(--ash)}
+    .nm-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.5rem}
+    .nm-tag{font-size:.58rem;padding:.1rem .35rem;border-radius:2px}
+    .nm-tag--buy{background:rgba(74,222,128,.12);color:var(--green)}
+    .nm-tag--obj{background:rgba(239,68,68,.1);color:var(--red)}
+    .nm-tag--next{background:rgba(160,117,42,.1);color:var(--gl)}
+    .nm-tag--prod{background:rgba(139,92,246,.1);color:#A78BFA}
+    .nm-signals{display:flex;flex-direction:column;gap:.3rem}
+    .nm-sig{display:flex;gap:.5rem;font-size:.72rem;align-items:flex-start;line-height:1.4}
+    .nm-sig-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:.35rem}
+    .nm-sig-dot--g{background:var(--green)}
+    .nm-sig-dot--r{background:var(--red)}
+    .nm-sig-dot--y{background:var(--gl)}
+    .nm-sig-dot--p{background:#A78BFA}
+    .nm-sig-text{color:var(--fog);font-family:'DM Sans',sans-serif}
+    .note-summary{padding:.75rem 1rem;background:rgba(160,117,42,.04);border-top:1px solid var(--dr)}
+    .ns-label{font-size:.58rem;color:var(--gold);letter-spacing:.15em;margin-bottom:.3rem}
+    .ns-text{font-size:.78rem;color:var(--fog);line-height:1.55;font-family:'DM Sans',sans-serif;font-style:italic}
+
+    /* ── UNIFIED SIGNAL FEED ── */
+    .signal-section{padding:5rem 0;background:#0A0908;border-top:1px solid var(--dr)}
+    .signal-feed-wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:3rem;align-items:start;margin-top:3rem}
+    .sf-card{background:var(--dc);border:1px solid var(--dr);overflow:hidden;font-family:'DM Mono',monospace}
+    .sf-bar{display:flex;align-items:center;justify-content:space-between;padding:.55rem 1rem;background:#0A0908;border-bottom:1px solid var(--dr)}
+    .sf-title{font-size:.62rem;color:var(--gl);letter-spacing:.1em}
+    .sf-meta{font-size:.58rem;color:var(--ash)}
+    .sf-item{display:flex;gap:.6rem;padding:.55rem .75rem;border-bottom:1px solid rgba(255,255,255,.03);animation:fadeSlide .4s var(--ease)}
+    .sf-item:nth-child(odd){background:rgba(255,255,255,.012)}
+    .sf-bar-l{width:2px;border-radius:1px;flex-shrink:0;min-height:42px}
+    .sf-icon{font-size:.85rem;flex-shrink:0;margin-top:.05rem}
+    .sf-body{flex:1}
+    .sf-top{display:flex;gap:.5rem;align-items:center;margin-bottom:.12rem}
+    .sf-type{font-size:.58rem;font-weight:700;letter-spacing:.08em}
+    .sf-time{font-size:.56rem;color:var(--ash)}
+    .sf-text{font-size:.72rem;color:var(--fog);line-height:1.4;font-family:'DM Sans',sans-serif}
+
+    /* Score panel */
+    .score-panel{background:var(--dc);border:1px solid var(--dr);padding:1.5rem;display:flex;flex-direction:column;gap:1.25rem}
+    .sp-head{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);letter-spacing:.15em;margin-bottom:.25rem}
+    .sp-account{background:var(--dark);padding:1rem}
+    .sp-co-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem}
+    .sp-co{font-family:'EB Garamond',serif;font-size:1.1rem;color:var(--cream);font-weight:500}
+    .sp-joint{text-align:right}
+    .sp-joint-n{font-family:'EB Garamond',serif;font-size:2rem;font-weight:700;color:var(--green);line-height:1}
+    .sp-joint-l{font-size:.56rem;color:var(--ash)}
+    .sp-scores{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.75rem}
+    .sp-score-item{background:var(--dc);padding:.5rem .65rem}
+    .sp-score-src{font-size:.6rem;color:var(--ash);margin-bottom:.15rem}
+    .sp-score-val{font-size:.95rem;font-weight:700;color:var(--gl);font-family:'EB Garamond',serif}
+    .sp-score-val span{font-size:.6rem;color:var(--ash);font-family:'DM Mono',monospace;font-weight:300}
+    .sp-action{background:rgba(160,117,42,.08);border-left:2px solid var(--gold);padding:.5rem .7rem;font-size:.75rem;color:var(--gl);font-style:italic;font-family:'DM Sans',sans-serif}
+
+    /* ── NEGOTIATION SCIENCE ── */
+    .nego-section{padding:6rem 0}
+    .nego-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3rem}
+    .nego-card{background:var(--dc);border:1px solid var(--dr);padding:0;overflow:hidden;font-family:'DM Mono',monospace}
+    .nego-head{padding:.7rem 1rem;background:#0A0908;border-bottom:1px solid var(--dr);font-size:.6rem;color:var(--gl);letter-spacing:.12em}
+    .nego-body{padding:1rem}
+    .nego-stat{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.85rem;padding-bottom:.85rem;border-bottom:1px solid var(--dr)}
+    .nego-stat:last-child{border:none;margin-bottom:0;padding-bottom:0}
+    .nego-n{font-family:'EB Garamond',serif;font-size:1.8rem;font-weight:700;line-height:1;flex-shrink:0;width:64px}
+    .nego-desc{flex:1}
+    .nego-desc strong{display:block;font-size:.82rem;color:var(--cream);font-family:'DM Sans',sans-serif;margin-bottom:.2rem}
+    .nego-desc p{font-size:.75rem;color:var(--ash);line-height:1.5;font-family:'DM Sans',sans-serif}
+    .nego-insight{margin-top:.25rem;font-size:.7rem;color:var(--gl);font-style:italic;font-family:'DM Sans',sans-serif}
+
+    /* ── COVERAGE ANALYSIS ── */
+    .coverage-section{padding:6rem 0;background:#0A0908;border-top:1px solid var(--dr)}
+    .coverage-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3rem}
+    .cov-table{background:var(--dc);border:1px solid var(--dr);overflow:hidden;font-family:'DM Mono',monospace}
+    .cov-head-row{display:grid;grid-template-columns:1.4fr .8fr .8fr .8fr .8fr;gap:.4rem;padding:.45rem .75rem;background:#0A0908;border-bottom:1px solid var(--dr);font-size:.58rem;color:var(--ash);letter-spacing:.08em}
+    .cov-row{display:grid;grid-template-columns:1.4fr .8fr .8fr .8fr .8fr;gap:.4rem;padding:.5rem .75rem;border-bottom:1px solid rgba(255,255,255,.03);align-items:center}
+    .cov-row:nth-child(odd){background:rgba(255,255,255,.012)}
+    .cov-co{font-size:.78rem;color:var(--cream);font-family:'DM Sans',sans-serif}
+    .cov-stage{font-size:.65rem;color:var(--ash)}
+    .cov-ch{display:flex;gap:.2rem}
+    .cov-ch-dot{width:14px;height:14px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.52rem;font-weight:700}
+    .cov-ch-dot--active{opacity:1}
+    .cov-ch-dot--missing{opacity:.2}
+    .cov-risk{font-size:.65rem;padding:.12rem .35rem;border-radius:2px}
+    .cov-risk--low{background:rgba(74,222,128,.12);color:var(--green)}
+    .cov-risk--med{background:rgba(201,151,62,.1);color:var(--gl)}
+    .cov-risk--high{background:rgba(239,68,68,.1);color:var(--red)}
+    .cov-gap{font-size:.65rem;color:var(--ash)}
+    .cov-gap--warn{color:#FCA5A5}
+
+    /* ── MODULE STACK ── */
+    .stack-section{padding:6rem 0;background:var(--paper)}
+    .stack-section .label{color:var(--gold)}
+    .stack-section .sec-h{color:var(--ink)}
+    .stack-section .sec-p{color:var(--dusk)}
+    .stack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2rem}
+    .stack-card{background:var(--dark);padding:1.75rem;border-top:2px solid var(--dr);transition:border-top-color .3s}
+    .stack-card--active{border-top-color:var(--gold)}
+    .stack-card:hover{border-top-color:var(--gold)}
+    .sc-icon{font-size:1.4rem;margin-bottom:.6rem}
+    .sc-name{font-family:'EB Garamond',serif;font-size:1.05rem;color:var(--cream);font-weight:500;margin-bottom:.3rem}
+    .sc-status{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;padding:.12rem .38rem;border-radius:2px;display:inline-block;margin-bottom:.6rem}
+    .sc-status--live{background:rgba(74,222,128,.12);color:var(--green)}
+    .sc-status--coming{background:rgba(120,113,108,.1);color:var(--ash)}
+    .sc-desc{font-size:.85rem;color:var(--ash);line-height:1.6}
+
+    /* ── CTA ── */
+    .cta-sec{padding:7rem 0;text-align:center;background:var(--dark);border-top:1px solid var(--dr)}
+    .cta-sec .sec-h{font-size:clamp(2rem,4vw,3rem);margin-bottom:1.25rem}
+    .cta-sub{font-size:1.05rem;color:var(--fog);max-width:520px;margin:0 auto 2.5rem;line-height:1.75}
+    .cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+
+    /* ── FOOTER ── */
+    footer{background:#0A0908;padding:2rem 0;border-top:1px solid var(--dr)}
+    .foot-in{max-width:var(--maxw);margin:0 auto;padding:0 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+    .foot-brand{font-family:'EB Garamond',serif;font-size:1rem;color:var(--iv);letter-spacing:.1em}
+    .foot-sub{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--ash);margin-top:.2rem}
+    .foot-links{display:flex;gap:2rem}
+    .foot-link{font-size:.8rem;color:var(--ash);transition:color .2s}
+    .foot-link:hover{color:var(--gl)}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:860px){
+      .insight-grid,.nego-grid,.coverage-grid,.signal-feed-wrap{grid-template-columns:1fr;gap:2.5rem}
+      .insight-grid--rev{direction:ltr}
+      .stat-band-inner{flex-wrap:wrap}
+      .sb-item{flex:1 1 45%;border-bottom:1px solid var(--dr)}
+      .sp-scores{grid-template-columns:1fr 1fr}
+      .cta-btns .btn{width:100%;text-align:center}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-in">
+      <div class="nav-brand">
+        <span class="nav-logo">SAMORA</span>
+        <span class="nav-tag">SAM Mail Agent</span>
+      </div>
+      <a href="https://samoraglobal.com" class="nav-back">← Samora Platform</a>
+      <a href="#cta" class="nav-cta">Request Access</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+    <div class="container">
+      <div class="hero-content">
+        <p class="hero-eyebrow reveal">Samora · Revenue Signal Intelligence</p>
+        <h1 class="hero-h reveal">Every conversation<br/>your team has ever had<br/><em>is data. Read it.</em></h1>
+        <p class="hero-sub reveal">SAM Mail Agent reads your emails, calendar and meeting transcripts — and surfaces the science behind your wins, the warnings behind your losses, and the exact next move for every deal in your pipeline. <strong>Not intuition. Signal.</strong></p>
+        <div class="hero-btns reveal">
+          <a href="https://samora-mail.vercel.app" class="btn btn--gold">Open SAM Mail Agent →</a>
+          <a href="#mail-science" class="btn btn--ghost">See the Intelligence →</a>
+        </div>
+        <div class="hero-sources reveal">
+          <span class="src-label">READS FROM</span>
+          <span class="src-badge src-badge--em">📧 Gmail</span>
+          <span class="src-badge src-badge--cal">📅 Calendar</span>
+          <span class="src-badge src-badge--note">🎤 Notetaker</span>
+          <span class="src-badge src-badge--li">💼 LinkedIn</span>
+          <span class="src-badge src-badge--wa">💬 WhatsApp</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAT BAND -->
+  <div class="stat-band">
+    <div class="stat-band-inner">
+      <div class="sb-item reveal">
+        <div class="sb-n">3×</div>
+        <div class="sb-l">more demos booked when proposal was opened 2+ times before the follow-up call</div>
+        <div class="sb-s">Samora Signal Analysis</div>
+      </div>
+      <div class="sb-item reveal">
+        <div class="sb-n">26d</div>
+        <div class="sb-l">average time a deal goes cold before a manager notices — with no signal layer</div>
+        <div class="sb-s">Pipeline Intelligence Data</div>
+      </div>
+      <div class="sb-item reveal">
+        <div class="sb-n">68%</div>
+        <div class="sb-l">of lost deals had a calendar gap of 10+ days between discovery and next touchpoint</div>
+        <div class="sb-s">SAM Calendar Analysis</div>
+      </div>
+      <div class="sb-item reveal">
+        <div class="sb-n">4.2×</div>
+        <div class="sb-l">higher close rate when buying signals appear in meeting notes before the proposal is sent</div>
+        <div class="sb-s">Notetaker + Pipeline Correlation</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIL SCIENCE -->
+  <section class="insight-sec" id="mail-science">
+    <div class="container">
+      <div class="insight-grid">
+        <div class="reveal">
+          <div class="label">Email Intelligence</div>
+          <h2 class="sec-h">Your email open rate<br/>is not a vanity metric.<br/>It's a buying signal.</h2>
+          <p class="sec-p">Every time a prospect opens your proposal, reads it twice, forwards it to someone, or goes cold — that's data. SAM reads it and tells you exactly what it means for the deal and what you should do next.</p>
+          <div style="display:flex;flex-direction:column;gap:.85rem">
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:.45rem"></div>
+              <div style="font-size:.92rem;color:var(--fog);line-height:1.6"><strong>Open 3×+ in 48 hrs</strong> — internal conversation happening. This is a group decision. Your follow-up should address the committee, not just your champion.</div>
+            </div>
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--gl);flex-shrink:0;margin-top:.45rem"></div>
+              <div style="font-size:.92rem;color:var(--fog);line-height:1.6"><strong>Opened once, never again</strong> — they read it, they moved on. The proposal didn't land. Ask for a call before you follow up in writing.</div>
+            </div>
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:.45rem"></div>
+              <div style="font-size:.92rem;color:var(--fog);line-height:1.6"><strong>Never opened, no reply in 5 days</strong> — the proposal never reached the right person. Change channel. Try WhatsApp or LinkedIn before sending another email.</div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="mail-dashboard">
+            <div class="mdb-bar">
+              <div class="mdb-logo">📧 Mail Intelligence</div>
+              <div class="mdb-title">Open rate analysis — 6 active proposals</div>
+              <div class="mdb-live"><div class="mdb-live-dot"></div>Live</div>
+            </div>
+            <div class="open-tracker">
+              <div class="ot-head">PROPOSAL ENGAGEMENT TRACKER</div>
+              <div class="ot-account">
+                <div class="ot-row1"><span class="ot-co">NovaMart Ltd — VP Ops</span><span class="ot-signal ot-signal--hot">BUY SIGNAL</span></div>
+                <div class="ot-opens">
+                  <div class="ot-dot ot-dot--open"></div><div class="ot-dot ot-dot--open"></div><div class="ot-dot ot-dot--open"></div><div class="ot-dot ot-dot--open"></div><div class="ot-dot ot-dot--no"></div>
+                  <span style="font-size:.65rem;color:var(--ash);margin-left:.35rem">4 opens · 2 days</span>
+                </div>
+                <div class="ot-meta">Last open: 2 hours ago · Time on page: avg 4.2 min</div>
+                <div class="ot-insight">→ Group review underway. Send exec summary to champion for internal sharing.</div>
+              </div>
+              <div class="ot-account" style="border-left-color:var(--gl)">
+                <div class="ot-row1"><span class="ot-co">Acme Corp — CFO</span><span class="ot-signal ot-signal--warm">WARM</span></div>
+                <div class="ot-opens">
+                  <div class="ot-dot ot-dot--open"></div><div class="ot-dot ot-dot--open"></div><div class="ot-dot ot-dot--no"></div><div class="ot-dot ot-dot--no"></div><div class="ot-dot ot-dot--no"></div>
+                  <span style="font-size:.65rem;color:var(--ash);margin-left:.35rem">2 opens · 6 days ago</span>
+                </div>
+                <div class="ot-meta">No open in 6 days · No reply received</div>
+                <div class="ot-insight">→ Proposal stalled. Switch to WhatsApp: "Quick check-in on the proposal…"</div>
+              </div>
+              <div class="ot-account" style="border-left-color:var(--red)">
+                <div class="ot-row1"><span class="ot-co">TechCo Solutions — Head IT</span><span class="ot-signal ot-signal--cold">COLD</span></div>
+                <div class="ot-opens">
+                  <div class="ot-dot ot-dot--open"></div><div class="ot-dot ot-dot--no"></div><div class="ot-dot ot-dot--no"></div><div class="ot-dot ot-dot--no"></div><div class="ot-dot ot-dot--no"></div>
+                  <span style="font-size:.65rem;color:var(--ash);margin-left:.35rem">1 open · 14 days ago</span>
+                </div>
+                <div class="ot-meta">Opened once for 38 seconds · Budget freeze flagged on last call</div>
+                <div class="ot-insight" style="color:var(--red)">→ Do not follow up commercially. Nurture with content only. Re-engage in 30 days.</div>
+              </div>
+            </div>
+            <div class="proposal-card">
+              <div class="pc-head">NEGOTIATION SCIENCE — PROPOSAL SCORING</div>
+              <div class="pc-account">
+                <div class="pc-row">
+                  <span class="pc-co">GreenPack India</span>
+                  <div class="pc-score-wrap"><div class="pc-score">92</div><div class="pc-score-lbl">Close probability</div></div>
+                </div>
+                <div class="pc-opens">📄 Opened 3× · 📅 Meeting booked after open 2 · 💬 WhatsApp reply: "Looks good, few questions"</div>
+                <div class="pc-pattern">Pattern match: 3-touch open + calendar booking within 48hrs = 87% close rate in similar deals</div>
+              </div>
+              <div class="pc-account" style="border-left-color:var(--red)">
+                <div class="pc-row">
+                  <span class="pc-co">BlueStar Foods</span>
+                  <div class="pc-score-wrap"><div class="pc-score" style="color:var(--red)">34</div><div class="pc-score-lbl">Close probability</div></div>
+                </div>
+                <div class="pc-opens">📄 Opened 1× · 📅 No meeting booked · ✉️ No reply in 12 days</div>
+                <div class="pc-warning">⚠ Pattern match: single open + no calendar action within 7 days = 78% churn probability</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALENDAR INTELLIGENCE -->
+  <section class="insight-sec insight-sec--alt" id="calendar">
+    <div class="container">
+      <div class="insight-grid insight-grid--rev">
+        <div class="reveal">
+          <div class="label">Calendar Intelligence</div>
+          <h2 class="sec-h">The gap between meetings<br/>is where deals go to die.</h2>
+          <p class="sec-p">68% of lost deals had a calendar gap of 10+ days somewhere between discovery and close. SAM reads your calendar alongside your emails — and flags the gaps, the momentum and the moments where you have the buyer's attention before you lose it.</p>
+          <div style="display:flex;flex-direction:column;gap:.85rem">
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:.45rem"></div>
+              <div style="font-size:.92rem;color:var(--fog);line-height:1.6"><strong>Meeting momentum score</strong> — how quickly are meetings progressing from discovery to demo to proposal? SAM tracks velocity and flags accounts slowing down.</div>
+            </div>
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--gl);flex-shrink:0;margin-top:.45rem"></div>
+              <div style="font-size:.92rem;color:var(--fog);line-height:1.6"><strong>Optimal follow-up timing</strong> — the best time to send the next email, based on when this specific buyer has historically responded. Not generic. Their pattern.</div>
+            </div>
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="width:6px;height:6px;border-radius:50%;background:#A78BFA;flex-shrink:0;margin-top:.45rem"></div>
+              <div style="font-size:.92rem;color:var(--fog);line-height:1.6"><strong>No-show intelligence</strong> — when a prospect reschedules or no-shows, SAM reads the email thread and signals whether it's a timing issue or a buying intent drop.</div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="cal-dashboard">
+            <div class="cal-bar">
+              <span class="cal-icon">📅</span>
+              <span class="cal-title">Calendar Intelligence — This Week</span>
+              <div class="mdb-live"><div class="mdb-live-dot"></div>Live</div>
+            </div>
+            <div class="cal-week">
+              <div class="cw-label">MEETING LOAD + QUALITY THIS WEEK</div>
+              <div class="cw-days">
+                <div class="cw-day cw-day--hot"><div class="cw-day-name">MON</div><div class="cw-day-meetings">4</div><div class="cw-day-type">2 demos</div></div>
+                <div class="cw-day"><div class="cw-day-name">TUE</div><div class="cw-day-meetings">2</div><div class="cw-day-type">1 proposal</div></div>
+                <div class="cw-day cw-day--warn"><div class="cw-day-name">WED</div><div class="cw-day-meetings">0</div><div class="cw-day-type">gap alert</div></div>
+                <div class="cw-day"><div class="cw-day-name">THU</div><div class="cw-day-meetings">3</div><div class="cw-day-type">1 close call</div></div>
+                <div class="cw-day"><div class="cw-day-name">FRI</div><div class="cw-day-meetings">1</div><div class="cw-day-type">review</div></div>
+              </div>
+            </div>
+            <div class="cal-insights">
+              <div class="ci-item">
+                <span class="ci-icon">🔥</span>
+                <div class="ci-body">
+                  <div class="ci-head">NovaMart — Demo booked for Thursday 3pm</div>
+                  <div class="ci-detail">Booked 18 hours after proposal was opened for the 3rd time. High intent signal confirmed by calendar action.</div>
+                  <div class="ci-action">→ Send pre-meeting briefing 24hrs before. Reference their Q3 expansion plan from LinkedIn.</div>
+                </div>
+              </div>
+              <div class="ci-item">
+                <span class="ci-icon">⚠️</span>
+                <div class="ci-body">
+                  <div class="ci-head">Acme Corp — 11 days since last meeting</div>
+                  <div class="ci-detail">Discovery call was positive. No follow-up meeting scheduled. Email was opened but not replied. Gap widening.</div>
+                  <div class="ci-action">→ Send calendar link with 3 specific slots. Subject: "15 mins to walk through your 2 questions on the proposal."</div>
+                </div>
+              </div>
+              <div class="ci-item">
+                <span class="ci-icon">📅</span>
+                <div class="ci-body">
+                  <div class="ci-head">BlueStar Foods — Rescheduled twice</div>
+                  <div class="ci-detail">Rescheduled Monday and Thursday calls. Email tone shifted from "looking forward" to "let me check with team." Buying intent dropping.</div>
+                  <div class="ci-action">→ Don't chase. Send value-add content. Ask: "Is this still a priority for Q3 or should we revisit Q4?"</div>
+                </div>
+              </div>
+              <div class="ci-item">
+                <span class="ci-icon">⚡</span>
+                <div class="ci-body">
+                  <div class="ci-head">Wednesday gap alert — no meetings scheduled</div>
+                  <div class="ci-detail">You have 3 warm accounts that haven't had a touch in 7+ days. Wednesday is clear. Best window to re-engage.</div>
+                  <div class="ci-action">→ Block 10am–12pm for outreach to GreenPack, Zephyr and Sunrise.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTETAKER INTELLIGENCE -->
+  <section class="insight-sec" id="notetaker">
+    <div class="container">
+      <div class="insight-grid">
+        <div class="reveal">
+          <div class="label">Notetaker Intelligence</div>
+          <h2 class="sec-h">The deal was won or lost<br/>in the meeting.<br/>SAM reads the transcript.</h2>
+          <p class="sec-p">Every discovery call, every demo, every negotiation — your notetaker captures it. SAM reads every transcript and extracts the buying signals, the objections, the product feedback and the moments that told you where the deal was really going — before the CRM entry ever happened.</p>
+          <div style="display:flex;flex-direction:column;gap:.85rem">
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:.45rem"></div>
+              <div style="font-size:.92rem;color:var(--fog);line-height:1.6"><strong>Buying phrase detection</strong> — "What would implementation look like?", "Can we include this in the contract?", "When can we start?" — SAM flags every phrase that signals real purchase intent.</div>
+            </div>
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:.45rem"></div>
+              <div style="font-size:.92rem;color:var(--fog);line-height:1.6"><strong>Objection mapping</strong> — when "pricing" or "data residency" or "competitor" comes up in 3 separate calls, SAM routes it as a systemic signal to product and management — not a rep issue.</div>
+            </div>
+            <div style="display:flex;gap:.75rem;align-items:flex-start">
+              <div style="width:6px;height:6px;border-radius:50%;background:#A78BFA;flex-shrink:0;margin-top:.45rem"></div>
+              <div style="font-size:.92rem;color:var(--fog);line-height:1.6"><strong>Product intelligence</strong> — feature requests, competitor comparisons, use-case mismatches — extracted from every call and routed directly to the product team as structured feedback, not scattered notes.</div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="note-dashboard">
+            <div class="note-bar">
+              <span class="note-icon">🎤</span>
+              <span class="note-title">Notetaker Intelligence — Meeting Analysis</span>
+            </div>
+            <div class="note-meeting">
+              <div class="nm-meta">
+                <span class="nm-name">NovaMart Ltd · Discovery Call</span>
+                <span class="nm-time">Today · 47 min</span>
+              </div>
+              <div class="nm-tags">
+                <span class="nm-tag nm-tag--buy">3 buying phrases</span>
+                <span class="nm-tag nm-tag--next">2 next steps agreed</span>
+                <span class="nm-tag nm-tag--prod">1 feature request</span>
+              </div>
+              <div class="nm-signals">
+                <div class="nm-sig"><div class="nm-sig-dot nm-sig-dot--g"></div><span class="nm-sig-text"><strong style="color:var(--green)">Buy signal:</strong> "What would rollout look like for a team of 12?" — implementation question indicates serious consideration</span></div>
+                <div class="nm-sig"><div class="nm-sig-dot nm-sig-dot--g"></div><span class="nm-sig-text"><strong style="color:var(--green)">Buy signal:</strong> "Can you show us the manager dashboard again?" — champion building internal case for sign-off</span></div>
+                <div class="nm-sig"><div class="nm-sig-dot nm-sig-dot--p"></div><span class="nm-sig-text"><strong style="color:#A78BFA">Product feedback:</strong> Asked about WhatsApp signal verification. Currently not in product. Competitor mentioned (SmartReach). Routed to product team.</span></div>
+              </div>
+            </div>
+            <div class="note-meeting">
+              <div class="nm-meta">
+                <span class="nm-name">TechCo Solutions · Follow-up Call</span>
+                <span class="nm-time">Tuesday · 28 min</span>
+              </div>
+              <div class="nm-tags">
+                <span class="nm-tag nm-tag--obj">2 objections</span>
+                <span class="nm-tag" style="background:rgba(239,68,68,.1);color:var(--red)">budget flag</span>
+              </div>
+              <div class="nm-signals">
+                <div class="nm-sig"><div class="nm-sig-dot nm-sig-dot--r"></div><span class="nm-sig-text"><strong style="color:var(--red)">Objection:</strong> "Budget freeze" mentioned twice in first 10 minutes. This was never logged in CRM. Rep marked deal as 70% close.</span></div>
+                <div class="nm-sig"><div class="nm-sig-dot nm-sig-dot--r"></div><span class="nm-sig-text"><strong style="color:var(--red)">Warning:</strong> Decision-maker absent from call. Only procurement on the line. Buying committee access lost.</span></div>
+                <div class="nm-sig"><div class="nm-sig-dot nm-sig-dot--y"></div><span class="nm-sig-text"><strong style="color:var(--gl)">SAM action:</strong> Immediately flagged to manager. Pipeline probability adjusted from 70% → 21%. Nurture sequence queued.</span></div>
+              </div>
+            </div>
+            <div class="note-summary">
+              <div class="ns-label">SAM WEEKLY SYNTHESIS</div>
+              <div class="ns-text">Across 11 calls this week: data residency clause raised 3 times (systemic — routed to legal + product), budget freeze language in 2 accounts (deal risk elevated), "when can we start" phrasing in 2 enterprise accounts (accelerate close sequence). Net sentiment: improving. Stage velocity: up 22% vs last month.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UNIFIED SIGNAL + JOINT SCORE -->
+  <section class="signal-section">
+    <div class="container">
+      <div class="label" style="text-align:center">The Full Picture</div>
+      <h2 class="sec-h" style="text-align:center;max-width:640px;margin:0 auto 1rem">When mail, calendar and meeting signals<br/>start speaking to each other.</h2>
+      <p style="text-align:center;color:var(--fog);font-size:1rem;max-width:560px;margin:0 auto 0;line-height:1.75">This is what no CRM can tell you. Because no CRM reads all three sources together and finds the pattern across them.</p>
+      <div class="signal-feed-wrap">
+        <!-- Unified feed -->
+        <div>
+          <div class="sf-card reveal">
+            <div class="sf-bar">
+              <span class="sf-title">Unified Signal Feed — NovaMart Ltd</span>
+              <span class="sf-meta">Last 14 days</span>
+            </div>
+            <div class="sf-item">
+              <div class="sf-bar-l" style="background:var(--gold)"></div>
+              <span class="sf-icon">📅</span>
+              <div class="sf-body">
+                <div class="sf-top"><span class="sf-type" style="color:var(--gold)">CALENDAR</span><span class="sf-time">Day 1</span></div>
+                <div class="sf-text">Discovery call completed · 47 min · VP Ops + Procurement attended</div>
+              </div>
+            </div>
+            <div class="sf-item">
+              <div class="sf-bar-l" style="background:#A78BFA"></div>
+              <span class="sf-icon">🎤</span>
+              <div class="sf-body">
+                <div class="sf-top"><span class="sf-type" style="color:#A78BFA">NOTETAKER</span><span class="sf-time">Day 1</span></div>
+                <div class="sf-text">3 buying phrases detected · "rollout for 12" · "manager dashboard" · "when can we start"</div>
+              </div>
+            </div>
+            <div class="sf-item">
+              <div class="sf-bar-l" style="background:var(--em)"></div>
+              <span class="sf-icon">📧</span>
+              <div class="sf-body">
+                <div class="sf-top"><span class="sf-type" style="color:var(--em)">EMAIL</span><span class="sf-time">Day 3</span></div>
+                <div class="sf-text">Proposal sent · Opened 4× over 2 days · Avg time on page: 4.2 min</div>
+              </div>
+            </div>
+            <div class="sf-item">
+              <div class="sf-bar-l" style="background:var(--wa)"></div>
+              <span class="sf-icon">💬</span>
+              <div class="sf-body">
+                <div class="sf-top"><span class="sf-type" style="color:var(--wa)">WHATSAPP</span><span class="sf-time">Day 4</span></div>
+                <div class="sf-text">VP Ops: "Looks interesting, have a few questions for the team" · Reply within 2 hrs of open</div>
+              </div>
+            </div>
+            <div class="sf-item">
+              <div class="sf-bar-l" style="background:var(--li)"></div>
+              <span class="sf-icon">💼</span>
+              <div class="sf-body">
+                <div class="sf-top"><span class="sf-type" style="color:var(--li)">LINKEDIN</span><span class="sf-time">Day 5</span></div>
+                <div class="sf-text">VP Ops shared post about distribution efficiency · Tagged 2 colleagues · High engagement</div>
+              </div>
+            </div>
+            <div class="sf-item">
+              <div class="sf-bar-l" style="background:var(--gold)"></div>
+              <span class="sf-icon">📅</span>
+              <div class="sf-body">
+                <div class="sf-top"><span class="sf-type" style="color:var(--gold)">CALENDAR</span><span class="sf-time">Day 5</span></div>
+                <div class="sf-text">Demo call booked for Day 7 · VP Ops + CFO added · Internal calendar invite noted</div>
+              </div>
+            </div>
+            <div class="sf-item">
+              <div class="sf-bar-l" style="background:var(--green)"></div>
+              <span class="sf-icon">✅</span>
+              <div class="sf-body">
+                <div class="sf-top"><span class="sf-type" style="color:var(--green)">SIGNAL</span><span class="sf-time">Day 7</span></div>
+                <div class="sf-text">Demo completed · CFO asked about contract structure · "Next steps" agreed on call</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Joint score -->
+        <div class="reveal">
+          <div class="score-panel">
+            <div class="sp-head">JOINT SCORING — SIGNAL SYNTHESIS</div>
+            <div class="sp-account">
+              <div class="sp-co-row">
+                <div class="sp-co">NovaMart Ltd</div>
+                <div class="sp-joint">
+                  <div class="sp-joint-n">94</div>
+                  <div class="sp-joint-l">Joint score</div>
+                </div>
+              </div>
+              <div class="sp-scores">
+                <div class="sp-score-item">
+                  <div class="sp-score-src">📧 Email signal</div>
+                  <div class="sp-score-val">91 <span>/ 100</span></div>
+                </div>
+                <div class="sp-score-item">
+                  <div class="sp-score-src">📅 Calendar signal</div>
+                  <div class="sp-score-val">96 <span>/ 100</span></div>
+                </div>
+                <div class="sp-score-item">
+                  <div class="sp-score-src">🎤 Meeting signal</div>
+                  <div class="sp-score-val">94 <span>/ 100</span></div>
+                </div>
+                <div class="sp-score-item">
+                  <div class="sp-score-src">💬 Omnichannel</div>
+                  <div class="sp-score-val">88 <span>/ 100</span></div>
+                </div>
+              </div>
+              <div class="sp-action">→ Accelerate. Send T&Cs today. CFO in the room — close window is 7 days. Pattern match: deals with CFO meeting in first 10 days close at 4.2× average rate.</div>
+            </div>
+            <div class="sp-account" style="border-left-color:var(--red)">
+              <div class="sp-co-row">
+                <div class="sp-co">TechCo Solutions</div>
+                <div class="sp-joint">
+                  <div class="sp-joint-n" style="color:var(--red)">21</div>
+                  <div class="sp-joint-l">Joint score</div>
+                </div>
+              </div>
+              <div class="sp-scores">
+                <div class="sp-score-item">
+                  <div class="sp-score-src">📧 Email signal</div>
+                  <div class="sp-score-val" style="color:var(--red)">24 <span>/ 100</span></div>
+                </div>
+                <div class="sp-score-item">
+                  <div class="sp-score-src">📅 Calendar signal</div>
+                  <div class="sp-score-val" style="color:var(--red)">18 <span>/ 100</span></div>
+                </div>
+                <div class="sp-score-item">
+                  <div class="sp-score-src">🎤 Meeting signal</div>
+                  <div class="sp-score-val" style="color:var(--red)">22 <span>/ 100</span></div>
+                </div>
+                <div class="sp-score-item">
+                  <div class="sp-score-src">💬 Omnichannel</div>
+                  <div class="sp-score-val" style="color:var(--ash)">28 <span>/ 100</span></div>
+                </div>
+              </div>
+              <div class="sp-action" style="border-left-color:var(--red);color:#FCA5A5">→ Pause commercial pressure. Budget freeze confirmed in transcript. Nurture only. Re-qualify in 45 days. Pipeline probability adjusted from 70% → 21%.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEGOTIATION SCIENCE -->
+  <section class="nego-section">
+    <div class="container">
+      <div class="label reveal">Negotiation Science</div>
+      <h2 class="sec-h reveal">The patterns behind every close.<br/>Now visible. Now replicable.</h2>
+      <p class="sec-p reveal">SAM analyses every won and lost deal — across email, calendar and meeting transcripts — and surfaces the patterns that no manager ever had time to find. Now every rep can close like your best rep.</p>
+      <div class="nego-grid">
+        <div class="nego-card reveal">
+          <div class="nego-head">WIN PATTERNS — WHAT CLOSES DEALS</div>
+          <div class="nego-body">
+            <div class="nego-stat">
+              <div class="nego-n" style="color:var(--green)">4.2×</div>
+              <div class="nego-desc">
+                <strong>CFO in the room before proposal</strong>
+                <p>Deals where the CFO or financial decision-maker attended a meeting before the proposal was sent closed at 4.2× the average rate. Getting economic access early is the single biggest predictor of close.</p>
+                <div class="nego-insight">→ SAM flags every account where CFO has not been on a call and suggests a specific ask to your champion.</div>
+              </div>
+            </div>
+            <div class="nego-stat">
+              <div class="nego-n" style="color:var(--green)">3×</div>
+              <div class="nego-desc">
+                <strong>Follow-up within 4 hours of proposal open</strong>
+                <p>When a rep follows up — call or WhatsApp — within 4 hours of a proposal being opened 2+ times, close rate triples. The buyer is engaged in that moment. Most reps never know when that window opens.</p>
+                <div class="nego-insight">→ SAM notifies the rep the moment the proposal is opened. Strike while it's warm.</div>
+              </div>
+            </div>
+            <div class="nego-stat">
+              <div class="nego-n" style="color:var(--gl)">18d</div>
+              <div class="nego-desc">
+                <strong>Optimal discovery-to-demo window</strong>
+                <p>Deals that moved from discovery to demo within 18 days had a 67% higher close rate than those that took 30+ days. Calendar gap analysis tells you exactly where each deal stands vs this benchmark.</p>
+                <div class="nego-insight">→ SAM flags every deal where the gap is widening beyond the optimal window.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="nego-card reveal">
+          <div class="nego-head">LOSS PATTERNS — WHAT KILLS DEALS</div>
+          <div class="nego-body">
+            <div class="nego-stat">
+              <div class="nego-n" style="color:var(--red)">26d</div>
+              <div class="nego-desc">
+                <strong>The silent death window</strong>
+                <p>The average deal goes cold 26 days before a manager notices. In that window, the rep is still logging it as active. The CRM still shows it green. The forecast still counts it. SAM sees it on day 4.</p>
+                <div class="nego-insight">→ Cold thread alert triggered at day 7 of no omnichannel activity. Not day 26.</div>
+              </div>
+            </div>
+            <div class="nego-stat">
+              <div class="nego-n" style="color:var(--red)">78%</div>
+              <div class="nego-desc">
+                <strong>Churn rate after single proposal open</strong>
+                <p>When a proposal is opened only once and there's no calendar action within 7 days, 78% of those deals are lost. One open is curiosity. Multiple opens with calendar follow-through is buying intent.</p>
+                <div class="nego-insight">→ SAM downgrades pipeline probability immediately after day 7 of single-open silence.</div>
+              </div>
+            </div>
+            <div class="nego-stat">
+              <div class="nego-n" style="color:var(--red)">2×</div>
+              <div class="nego-desc">
+                <strong>Objection repetition is a product problem</strong>
+                <p>When the same objection appears in 2+ meeting transcripts across different reps and different accounts, it is a product or positioning gap — not a rep skill issue. SAM surfaces it within the same week.</p>
+                <div class="nego-insight">→ Routed to product team as structured feedback. Not lost in an email thread.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COVERAGE ANALYSIS -->
+  <section class="coverage-section">
+    <div class="container">
+      <div class="label reveal" style="color:var(--gold)">Coverage Analysis</div>
+      <h2 class="sec-h reveal">Which accounts are being worked.<br/>Which are being ignored.<br/>Which are being lost.</h2>
+      <p class="sec-p reveal" style="color:var(--fog)">SAM reads across all channels per account and tells you your real coverage rate — not the one your reps report, but the one the data shows. Then it tells you exactly where the risk is and what to do about it.</p>
+      <div class="coverage-grid">
+        <div class="cov-table reveal">
+          <div class="cov-head-row">
+            <span>Account</span><span>Stage</span><span>Channels</span><span>Risk</span><span>Gap</span>
+          </div>
+          <div class="cov-row">
+            <div><div class="cov-co">NovaMart Ltd</div><div class="cov-stage">Demo Done</div></div>
+            <div class="cov-stage">Proposal</div>
+            <div class="cov-ch">
+              <div class="cov-ch-dot cov-ch-dot--active" style="background:rgba(234,67,53,.15);color:#EA4335">@</div>
+              <div class="cov-ch-dot cov-ch-dot--active" style="background:rgba(10,102,194,.15);color:#5BA4CF">in</div>
+              <div class="cov-ch-dot cov-ch-dot--active" style="background:rgba(37,211,102,.12);color:#25D366">w</div>
+              <div class="cov-ch-dot cov-ch-dot--active" style="background:rgba(160,117,42,.12);color:var(--gl)">📅</div>
+            </div>
+            <span class="cov-risk cov-risk--low">Low</span>
+            <span class="cov-gap">None</span>
+          </div>
+          <div class="cov-row">
+            <div><div class="cov-co">Acme Corp</div><div class="cov-stage">Proposal</div></div>
+            <div class="cov-stage">Negotiation</div>
+            <div class="cov-ch">
+              <div class="cov-ch-dot cov-ch-dot--active" style="background:rgba(234,67,53,.15);color:#EA4335">@</div>
+              <div class="cov-ch-dot cov-ch-dot--missing" style="background:rgba(10,102,194,.15);color:#5BA4CF">in</div>
+              <div class="cov-ch-dot cov-ch-dot--missing" style="background:rgba(37,211,102,.12);color:#25D366">w</div>
+              <div class="cov-ch-dot cov-ch-dot--active" style="background:rgba(160,117,42,.12);color:var(--gl)">📅</div>
+            </div>
+            <span class="cov-risk cov-risk--med">Medium</span>
+            <span class="cov-gap cov-gap--warn">No LinkedIn · No WA</span>
+          </div>
+          <div class="cov-row">
+            <div><div class="cov-co">TechCo Solutions</div><div class="cov-stage">Prospect</div></div>
+            <div class="cov-stage">Cold</div>
+            <div class="cov-ch">
+              <div class="cov-ch-dot cov-ch-dot--active" style="background:rgba(234,67,53,.15);color:#EA4335">@</div>
+              <div class="cov-ch-dot cov-ch-dot--missing" style="background:rgba(10,102,194,.15);color:#5BA4CF">in</div>
+              <div class="cov-ch-dot cov-ch-dot--missing" style="background:rgba(37,211,102,.12);color:#25D366">w</div>
+              <div class="cov-ch-dot cov-ch-dot--missing" style="background:rgba(160,117,42,.12);color:var(--gl)">📅</div>
+            </div>
+            <span class="cov-risk cov-risk--high">High</span>
+            <span class="cov-gap cov-gap--warn">Email only · 14d gap</span>
+          </div>
+          <div class="cov-row">
+            <div><div class="cov-co">GreenPack India</div><div class="cov-stage">Proposal</div></div>
+            <div class="cov-stage">Closing</div>
+            <div class="cov-ch">
+              <div class="cov-ch-dot cov-ch-dot--active" style="background:rgba(234,67,53,.15);color:#EA4335">@</div>
+              <div class="cov-ch-dot cov-ch-dot--active" style="background:rgba(10,102,194,.15);color:#5BA4CF">in</div>
+              <div class="cov-ch-dot cov-ch-dot--active" style="background:rgba(37,211,102,.12);color:#25D366">w</div>
+              <div class="cov-ch-dot cov-ch-dot--active" style="background:rgba(160,117,42,.12);color:var(--gl)">📅</div>
+            </div>
+            <span class="cov-risk cov-risk--low">Low</span>
+            <span class="cov-gap">None</span>
+          </div>
+          <div class="cov-row">
+            <div><div class="cov-co">BlueStar Foods</div><div class="cov-stage">Discovery</div></div>
+            <div class="cov-stage">Stalled</div>
+            <div class="cov-ch">
+              <div class="cov-ch-dot cov-ch-dot--active" style="background:rgba(234,67,53,.15);color:#EA4335">@</div>
+              <div class="cov-ch-dot cov-ch-dot--missing" style="background:rgba(10,102,194,.15);color:#5BA4CF">in</div>
+              <div class="cov-ch-dot cov-ch-dot--missing" style="background:rgba(37,211,102,.12);color:#25D366">w</div>
+              <div class="cov-ch-dot cov-ch-dot--missing" style="background:rgba(160,117,42,.12);color:var(--gl)">📅</div>
+            </div>
+            <span class="cov-risk cov-risk--high">High</span>
+            <span class="cov-gap cov-gap--warn">Rescheduled 2× · Stalled</span>
+          </div>
+        </div>
+        <div class="reveal" style="display:flex;flex-direction:column;gap:1.5rem">
+          <div style="background:var(--dc);border:1px solid var(--dr);padding:1.5rem;border-left:3px solid var(--green)">
+            <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--green);letter-spacing:.15em;margin-bottom:.5rem">COVERAGE SCORE — THIS WEEK</div>
+            <div style="font-family:'EB Garamond',serif;font-size:2.5rem;font-weight:700;color:var(--green);line-height:1;margin-bottom:.5rem">62%</div>
+            <div style="font-size:.88rem;color:var(--fog);line-height:1.6">3 of 5 priority accounts have active omnichannel coverage this week. 2 are at high risk from single-channel or no-touch gaps.</div>
+          </div>
+          <div style="background:var(--dc);border:1px solid var(--dr);padding:1.5rem;border-left:3px solid var(--gold)">
+            <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);letter-spacing:.15em;margin-bottom:.5rem">SAM RECOMMENDATION</div>
+            <div style="font-size:.88rem;color:var(--fog);line-height:1.65">Connect LinkedIn and WhatsApp for Acme Corp this week — email-only coverage at negotiation stage is a known loss pattern. For TechCo, pause outreach and switch to 30-day nurture sequence. Allocate saved time to NovaMart close sprint.</div>
+          </div>
+          <div style="background:var(--dc);border:1px solid var(--dr);padding:1.5rem;border-left:3px solid #A78BFA">
+            <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:#A78BFA;letter-spacing:.15em;margin-bottom:.5rem">MEETING COVERAGE RATE</div>
+            <div style="font-family:'EB Garamond',serif;font-size:2.5rem;font-weight:700;color:#A78BFA;line-height:1;margin-bottom:.5rem">4 / 7</div>
+            <div style="font-size:.88rem;color:var(--fog);line-height:1.6">4 of your 7 warm accounts have had a calendar meeting in the last 10 days. 3 haven't. Those 3 are your highest churn risk this week.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULE STACK -->
+  <section class="stack-section">
+    <div class="container">
+      <div class="label reveal">Signal Sources</div>
+      <h2 class="sec-h reveal">Every source that feeds SAM.</h2>
+      <p class="sec-p reveal" style="color:var(--dusk)">SAM Mail Agent is modular. Connect the sources you use today. Each module adds depth to the intelligence. Start with email. Add calendar. Add notetaker. The picture gets sharper with every source you connect.</p>
+      <div class="stack-grid">
+        <div class="stack-card stack-card--active reveal">
+          <div class="sc-icon">📧</div>
+          <div class="sc-name">Gmail</div>
+          <div class="sc-status sc-status--live">Live</div>
+          <div class="sc-desc">Full sent folder analysis. Open rate tracking. Proposal engagement science. Thread sentiment. Cold thread alerts. Reply timing patterns.</div>
+        </div>
+        <div class="stack-card stack-card--active reveal">
+          <div class="sc-icon">📅</div>
+          <div class="sc-name">Calendar</div>
+          <div class="sc-status sc-status--live">Live</div>
+          <div class="sc-desc">Meeting velocity analysis. Calendar gap alerts. Discovery-to-demo timing. No-show intelligence. Optimal follow-up window detection.</div>
+        </div>
+        <div class="stack-card stack-card--active reveal">
+          <div class="sc-icon">🎤</div>
+          <div class="sc-name">Notetaker / Transcripts</div>
+          <div class="sc-status sc-status--live">Live</div>
+          <div class="sc-desc">Buying phrase detection. Objection mapping. Product feedback extraction. Meeting sentiment scoring. Win/loss pattern analysis across all calls.</div>
+        </div>
+        <div class="stack-card stack-card--active reveal">
+          <div class="sc-icon">💼</div>
+          <div class="sc-name">LinkedIn</div>
+          <div class="sc-status sc-status--live">Live</div>
+          <div class="sc-desc">Connection and DM tracking. Post engagement signals. Intent detection from activity. Cross-referenced with email and calendar for unified account view.</div>
+        </div>
+        <div class="stack-card stack-card--active reveal">
+          <div class="sc-icon">💬</div>
+          <div class="sc-name">WhatsApp</div>
+          <div class="sc-status sc-status--live">Live</div>
+          <div class="sc-desc">Native WhatsApp Business tracking. Delivery and read signals. Reply rate analysis. Critical for India, Middle East and Africa where WhatsApp is the primary channel.</div>
+        </div>
+        <div class="stack-card reveal">
+          <div class="sc-icon">📞</div>
+          <div class="sc-name">Calls</div>
+          <div class="sc-status sc-status--coming">Coming</div>
+          <div class="sc-desc">JustCall and CallHippo integration. Call recordings, outcomes, sentiment and objections cross-referenced with all other signal sources.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-sec" id="cta">
+    <div class="container">
+      <h2 class="sec-h reveal">Start reading your signals today.</h2>
+      <p class="cta-sub reveal">Connect Gmail in 5 minutes. Get proposal engagement science, calendar gap alerts and meeting transcript intelligence working for your pipeline by end of day. No CRM update required.</p>
+      <div class="cta-btns reveal">
+        <a href="https://samora-mail.vercel.app" class="btn btn--gold">Open SAM Mail Agent →</a>
+        <a href="https://samoraglobal.com/#contact" class="btn btn--ghost">Talk to Samora</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-in">
+      <div>
+        <div class="foot-brand">SAMORA</div>
+        <div class="foot-sub">SAM Mail Agent · Part of the Samora Revenue Intelligence Platform</div>
+      </div>
+      <div class="foot-links">
+        <a href="https://samoraglobal.com" class="foot-link">samoraglobal.com</a>
+        <a href="https://samoratrack.vercel.app" class="foot-link">SamoraTrack</a>
+        <a href="https://samoraglobal.com/#contact" class="foot-link">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const ro = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const parent = e.target.closest('.nego-grid,.coverage-grid,.stack-grid,.signal-feed-wrap,.stat-band-inner');
+        const delay = parent ? [...parent.querySelectorAll('.reveal')].indexOf(e.target) * 100 : 0;
+        setTimeout(() => e.target.classList.add('visible'), delay);
+        ro.unobserve(e.target);
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+      if (el.closest('.hero')) {
+        const i = [...document.querySelectorAll('.hero .reveal')].indexOf(el);
+        setTimeout(() => el.classList.add('visible'), 200 + i * 150);
+      } else {
+        ro.observe(el);
+      }
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      });
+    });
+  </script>
+</body>
+</html>
