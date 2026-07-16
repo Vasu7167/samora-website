@@ -847,7 +847,7 @@ form{background:var(--dc);padding:2.5rem;border:1px solid var(--dr);display:flex
 /* ── SAMORATRACK REP-FIRST ── */
 .st-rep-first{margin:2.5rem 0 3rem}
 .strf-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--gold);margin-bottom:1.25rem}
-.strf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem}
+.strf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
 .strf-card{background:var(--dark);padding:1.5rem 1.25rem;border-top:2px solid var(--dr);transition:border-top-color .3s}
 .strf-card:hover{border-top-color:var(--gold)}
 .strf-icon{font-size:1.5rem;margin-bottom:.75rem}
