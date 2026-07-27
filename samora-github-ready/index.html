@@ -4547,6 +4547,17 @@ function _requiredCount(taskText) {
   var n = parseInt(m[1], 10);
   return (n && n > 1) ? n : 1;
 }
+// Meeting/task boilerplate that is NOT a usable identifier. A recap can only
+// complete a task if it shares a DISTINCTIVE token (a person, account or topic),
+// never a generic word like "weekly" or "review" — otherwise a notetaker digest
+// or notification email that merely contains "weekly" would falsely verify it.
+var _GENERIC_TASK_WORDS = {};
+('meeting meetings call calls sync syncs demo demos review reviews weekly biweekly monthly daily quarterly fortnightly cadence standup huddle catchup checkin touchbase brainstorm brainstorming session sessions discussion discuss align alignment update updates recap recaps notes note followup followups follow internal external team teams general misc adhoc connect chat quick roundup planning plan prep debrief retro retrospective onboarding intro introduction kickoff alignment virtual physical online zoom gmeet meet google calendar invite scheduled schedule reschedule finalize finalise about regarding discuss next steps step this that from your please today tomorrow week month with and the for our their your').split(/\s+/).forEach(function(w){ _GENERIC_TASK_WORDS[w] = 1; });
+function _distinctiveWords(taskText) {
+  return (taskText || '').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(function(w) {
+    return w.length >= 4 && !_GENERIC_TASK_WORDS[w];
+  });
+}
 var _autoCompleteBusy = false;
 async function autoCompleteTasks(silent) {
   if (_autoCompleteBusy) return;
@@ -4571,16 +4582,18 @@ async function autoCompleteTasks(silent) {
     });
     if (calTasks.length) {
       var transcripts = [], verifiedMeetings = [], inboxNotes = [];
+      // Hard lower bound = start of TODAY in local time (epoch seconds). The scan
+      // can never reach into yesterday or earlier; a today task is only ever
+      // matched against today's evidence.
+      var _startOfToday = Math.floor(new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() / 1000);
       try {
-        // Windows are kept to TODAY: a current-day task must be proven by
-        // current-day evidence, never a transcript/recap from a prior day.
         var results = await Promise.all([
-          fetch(EDGE_FN_URL, { method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+currentUser.token,'apikey':SB_KEY}, body:JSON.stringify({action:'get_meeting_transcripts', days:1}) }).then(function(r){return r.json();}),
+          fetch(EDGE_FN_URL, { method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+currentUser.token,'apikey':SB_KEY}, body:JSON.stringify({action:'get_meeting_transcripts', days:1, since:_startOfToday}) }).then(function(r){return r.json();}),
           fetch(EDGE_FN_URL, { method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+currentUser.token,'apikey':SB_KEY}, body:JSON.stringify({action:'verify_meetings', date: today2}) }).then(function(r){return r.json();}),
           // Notetaker recaps sitting in the inbox (Fireflies/Fathom/Otter/Read.ai/
           // Grain/tl;dv/Gong/... email you a summary). Deterministic scan, no AI.
           // A recap only exists if the meeting happened, so it is attendance proof.
-          fetch(EDGE_FN_URL, { method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+currentUser.token,'apikey':SB_KEY}, body:JSON.stringify({action:'list_notetaker_notes', days:1}) }).then(function(r){return r.json();})
+          fetch(EDGE_FN_URL, { method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+currentUser.token,'apikey':SB_KEY}, body:JSON.stringify({action:'list_notetaker_notes', days:1, since:_startOfToday}) }).then(function(r){return r.json();})
         ]);
         transcripts = results[0].transcripts || [];
         verifiedMeetings = results[1].meetings || [];
@@ -4598,6 +4611,12 @@ async function autoCompleteTasks(silent) {
           return w.length >= 4 && !['meeting','with','call','sync','demo','catch','catchup','virtual'].includes(w);
         });
         if (!words.length) return;
+        // Distinctive tokens (names/accounts/topics, generic meeting words stripped).
+        // Recap/transcript evidence must overlap on one of THESE, never on a bare
+        // "weekly"/"review". A task with no distinctive token (e.g. "Weekly Cadence
+        // / Review") can only be closed by real calendar attendance, not a recap.
+        var distinct = _distinctiveWords(task.text);
+        var hasIdentity = distinct.length > 0 || _personsIn(task.text).length > 0;
 
         // Match the task to a verified calendar event by title-word overlap
         var calEv = verifiedMeetings.find(function(m) {
@@ -4611,10 +4630,11 @@ async function autoCompleteTasks(silent) {
         }
 
         // Evidence 1 (strongest): notetaker transcript exists — but only one
-        // recorded TODAY, naming the right person, in the right region.
-        var ev = transcripts.find(function(t) {
+        // recorded TODAY, sharing a DISTINCTIVE token, naming the right person,
+        // in the right region.
+        var ev = hasIdentity && transcripts.find(function(t) {
           var tt = ((t.title||'') + ' ' + (t.participants||[]).join(' ')).toLowerCase();
-          if (!words.some(function(w){ return tt.includes(w); })) return false;
+          if (!distinct.some(function(w){ return tt.includes(w); })) return false;
           var td = _evDate(t);
           if (td && !_isToday(td)) return false;         // never a prior-day transcript
           return _matchGatesOk(task.text, tt);
@@ -4624,11 +4644,11 @@ async function autoCompleteTasks(silent) {
           autoLog.push('🎙 ' + esc(task.text.slice(0,50)) + ' → transcript "' + esc((ev.title||'').slice(0,40)) + '"');
           return;
         }
-        // Evidence 1b: notetaker recap email in the inbox (today only). Same
-        // strength as a direct transcript, tagged distinctly for a 🎙 receipt.
-        var note = inboxNotes.find(function(n) {
+        // Evidence 1b: notetaker recap email in the inbox (today only, distinctive
+        // token required so a digest/notification never verifies a meeting).
+        var note = hasIdentity && inboxNotes.find(function(n) {
           var nt = ((n.title||'') + ' ' + (n.participants||[]).join(' ')).toLowerCase();
-          if (!words.some(function(w){ return nt.includes(w); })) return false;
+          if (!distinct.some(function(w){ return nt.includes(w); })) return false;
           if (!_isToday(_evDate(n))) return false;        // recap must be dated today
           return _matchGatesOk(task.text, nt);
         });
@@ -4673,7 +4693,7 @@ async function autoCompleteTasks(silent) {
             }
             return; // never fall through to fuzzy word matching for OOO tasks
           }
-          var taskWords = task.text.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(function(w){return w.length>3 && !['mail','send','from','with','that','this','have','will','been','they','team','respond','reply','follow','reach','write','email','share','outreach','through'].includes(w);});
+          var taskWords = task.text.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(function(w){return w.length>3 && !_GENERIC_TASK_WORDS[w] && !['mail','send','from','have','will','been','respond','reply','reach','write','email','share','outreach','through'].includes(w);});
           // Count EVERY qualifying send (not just the first) so bulk targets are
           // honoured, and apply person + region gates to each candidate.
           var matches = sentEmails.filter(function(e) {
