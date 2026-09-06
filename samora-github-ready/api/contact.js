@@ -45,6 +45,13 @@ const esc = (s) =>
 const clean = (v, max) => String(v == null ? '' : v).trim().slice(0, max);
 
 module.exports = async function handler(req, res) {
+  // Never cache an API response. vercel.json had `Cache-Control: public,
+  // max-age=3600` on "/(.*)", which matched /api/contact too, so the health
+  // check returned an hour-old body and looked like nothing had deployed.
+  // Set here as well as in vercel.json: this one is in our control regardless
+  // of what the config says.
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+
   // ── GET is a health check ───────────────────────────────────────────────
   // Booleans only, never values. Visiting /api/contact in a browser answers
   // "is this configured and can it reach the table" in one click, which beats
