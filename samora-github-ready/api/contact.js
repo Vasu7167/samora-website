@@ -61,6 +61,26 @@ module.exports = async function handler(req, res) {
         CONTACT_TO: !!process.env.CONTACT_TO,
       },
       table: 'not checked',
+
+      // ── Which deployment is answering ────────────────────────────────────
+      // Vercel injects these automatically, with no configuration. If they are
+      // populated, the function IS running on Vercel and the five above are
+      // simply not set on THIS project or THIS environment. If they are all
+      // undefined, something stranger is going on and that is worth knowing
+      // before changing anything else.
+      vercel: {
+        env: process.env.VERCEL_ENV || '(not on Vercel?)',
+        commit: (process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7) || '(none)',
+        repo: process.env.VERCEL_GIT_REPO_SLUG || '(none)',
+        region: process.env.VERCEL_REGION || '(none)',
+      },
+
+      // Variable NAMES only, never values. Catches the mistakes a boolean
+      // cannot: a trailing space, a NEXT_PUBLIC_ prefix, SUPBASE_URL, or the
+      // variable sitting on a different project entirely.
+      matching_var_names: Object.keys(process.env)
+        .filter((k) => /SUPABASE|RESEND|CONTACT/i.test(k))
+        .sort(),
     };
     if (SUPABASE_URL && SVC) {
       try {
