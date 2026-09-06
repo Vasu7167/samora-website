@@ -265,23 +265,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const label = b.textContent;
     b.textContent = 'Sending…';
     b.disabled = true;
-    fetch('https://formspree.io/f/YOUR_FORM_ID', {
+    // Show the real reason rather than a bare "Try again". Someone told their
+    // email was rejected can fix it; someone shown "Try again" leaves.
+    const err = (msg) => {
+      let m = form.querySelector('.form-err');
+      if (!m) {
+        m = document.createElement('p');
+        m.className = 'fnote form-err';
+        m.style.color = '#c4453a';
+        b.insertAdjacentElement('afterend', m);
+      }
+      m.textContent = msg || '';
+    };
+    err('');
+
+    // Posts to our own /api/contact, which STORES the enquiry before it tries
+    // to email anyone. This used to post to
+    // https://formspree.io/f/YOUR_FORM_ID, the placeholder from Formspree's
+    // docs, which was never filled in, so every enquiry ever submitted 404'd
+    // and was lost.
+    const payload = Object.fromEntries(new FormData(form).entries());
+    // Which form this was, so enquiries can be told apart later.
+    payload.source = (location.pathname.split('/').pop() || 'index').replace('.html', '') || 'index';
+
+    fetch('/api/contact', {
       method: 'POST',
-      body: new FormData(form),
-      headers: { Accept: 'application/json' }
-    }).then(res => {
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(async res => {
+      const data = await res.json().catch(() => ({}));
       b.disabled = false;
-      if (res.ok) {
+      if (res.ok && data.ok) {
         form.reset();
         b.textContent = label;
         toast?.classList.add('show');
         setTimeout(() => toast?.classList.remove('show'), 4500);
       } else {
         b.textContent = 'Try again';
+        err(data.error || 'Something went wrong. Please email vasu@samoraglobal.com.');
       }
     }).catch(() => {
       b.disabled = false;
       b.textContent = 'Try again';
+      err('Could not reach the server. Please email vasu@samoraglobal.com.');
     });
   });
 });
