@@ -45,9 +45,39 @@ const esc = (s) =>
 const clean = (v, max) => String(v == null ? '' : v).trim().slice(0, max);
 
 module.exports = async function handler(req, res) {
+  // ── GET is a health check ───────────────────────────────────────────────
+  // Booleans only, never values. Visiting /api/contact in a browser answers
+  // "is this configured and can it reach the table" in one click, which beats
+  // guessing from a generic error on the form.
+  if (req.method === 'GET') {
+    const out = {
+      ok: true,
+      endpoint: 'alive',
+      env: {
+        SUPABASE_URL: !!SUPABASE_URL,
+        SUPABASE_SERVICE_ROLE_KEY: !!SVC,
+        RESEND_API_KEY: !!RESEND_KEY,
+        RESEND_FROM: !!process.env.RESEND_FROM,
+        CONTACT_TO: !!process.env.CONTACT_TO,
+      },
+      table: 'not checked',
+    };
+    if (SUPABASE_URL && SVC) {
+      try {
+        const r = await fetch(SUPABASE_URL + '/rest/v1/website_enquiries?select=id&limit=1', {
+          headers: { apikey: SVC, Authorization: 'Bearer ' + SVC },
+        });
+        out.table = r.ok ? 'reachable' : 'error ' + r.status + ': ' + (await r.text()).slice(0, 200);
+      } catch (e) {
+        out.table = 'unreachable: ' + (e && e.message);
+      }
+    }
+    return res.status(200).json(out);
+  }
+
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ ok: false, error: 'POST only' });
+    res.setHeader('Allow', 'POST, GET');
+    return res.status(405).json({ ok: false, error: 'POST or GET only' });
   }
 
   // Vercel parses a JSON body for us. Guard anyway.
@@ -94,7 +124,8 @@ module.exports = async function handler(req, res) {
   // ── 1. Store ────────────────────────────────────────────────────────────
   if (!SUPABASE_URL || !SVC) {
     console.error('contact: Supabase env vars missing, cannot store enquiry');
-    return res.status(500).json({ ok: false, error: 'Something went wrong on our side. Please email vasu@samoraglobal.com.' });
+    // code is generic enough to be public and specific enough to debug with.
+    return res.status(500).json({ ok: false, code: 'no_env', error: 'Something went wrong on our side. Please email vasu@samoraglobal.com.' });
   }
 
   let stored = null;
@@ -110,14 +141,15 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify(row),
     });
     if (!r.ok) {
-      console.error('contact: insert failed', r.status, await r.text());
-      return res.status(500).json({ ok: false, error: 'Something went wrong on our side. Please email vasu@samoraglobal.com.' });
+      const detail = (await r.text()).slice(0, 300);
+      console.error('contact: insert failed', r.status, detail);
+      return res.status(500).json({ ok: false, code: 'db_' + r.status, error: 'Something went wrong on our side. Please email vasu@samoraglobal.com.' });
     }
     const j = await r.json();
     stored = (Array.isArray(j) ? j[0] : j) || null;
   } catch (e) {
     console.error('contact: insert threw', e && e.message);
-    return res.status(500).json({ ok: false, error: 'Something went wrong on our side. Please email vasu@samoraglobal.com.' });
+    return res.status(500).json({ ok: false, code: 'db_throw', error: 'Something went wrong on our side. Please email vasu@samoraglobal.com.' });
   }
 
   // ── 2. Notify. Logged on failure, never surfaced. ───────────────────────
