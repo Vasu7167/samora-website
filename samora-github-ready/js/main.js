@@ -1,140 +1,240 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>About &middot; Samora Global</title>
-<meta name="description" content="The builder behind Samora. Twelve years, 100+ enterprise deals, and the thesis that came out of it." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css?v=2" />
-</head>
-<body>
-<nav class="nav nav--solid" id="nav">
-  <div class="nav-inner">
-    <a href="/" class="nav-logo">SAMORA</a>
-    <div class="nav-links">
-      <div class="nav-drop">
-        <button class="nav-drop-t">Platform <span style="font-size:.6rem">&#9662;</span></button>
-        <div class="nav-drop-m">
-          <a href="/daily-command" class="ndi"><span class="ndi-ic">01</span><span><span class="ndi-t">Daily Command</span><span class="ndi-d">SAM Brief, meeting prep, habits, alerts</span></span></a>
-          <a href="/sampaigns" class="ndi"><span class="ndi-ic">02</span><span><span class="ndi-t">SAMpaigns</span><span class="ndi-d">Scout, enrich, draft and schedule outreach</span></span></a>
-          <a href="/pipeline" class="ndi"><span class="ndi-ic">03</span><span><span class="ndi-t">Pipeline &amp; Verification</span><span class="ndi-d">Three-tier truth, forecast, coverage</span></span></a>
-          <a href="/intelligence" class="ndi"><span class="ndi-ic">04</span><span><span class="ndi-t">Intelligence</span><span class="ndi-d">Detective SAM, signals, market intel</span></span></a>
-          <a href="/samagic" class="ndi"><span class="ndi-ic">05</span><span><span class="ndi-t">SAMagic</span><span class="ndi-d">The executive and board view</span></span></a>
-        </div>
-      </div>
-      <a href="/why-samora">Why Samora</a>
-      <a href="/about">About</a>
-    </div>
-    <a href="/audit" class="nav-cta">Get Your Audit</a>
-    <button class="nav-burger" id="burger"><span></span><span></span><span></span></button>
-  </div>
-</nav>
+/* ── SAMORA v2 ── */
+'use strict';
 
-<div class="mnav" id="mnav">
-  <div class="mnav-h">Platform</div>
-  <a href="/daily-command">Daily Command</a>
-  <a href="/sampaigns">SAMpaigns</a>
-  <a href="/pipeline">Pipeline &amp; Verification</a>
-  <a href="/intelligence">Intelligence</a>
-  <a href="/samagic">SAMagic</a>
-  <div class="mnav-h">Company</div>
-  <a href="/why-samora">Why Samora</a>
-  <a href="/about">About</a>
-  <a href="/audit">Get Your Audit</a>
-  <a href="/contact">Contact</a>
-</div>
-<div class="spacer"></div>
-<section class="phead">
-  <div class="container">
-    <span class="sec-label reveal">The Builder</span>
-    <h1 class="reveal">Twelve years. Zero shortcuts.</h1>
-    <p class="reveal">Samora was not built in a boardroom. It was built by doing the work, market by market, deal by deal, failure by failure.</p>
-    <div class="phead-tags reveal"><span class="ptag">100+ ENTERPRISE DEALS</span><span class="ptag">0&rarr;1, 1&rarr;10, 10&rarr;100+</span><span class="ptag">MEDDPIC-TRAINED</span></div>
-  </div>
-</section>
+// ══ ORBIT NODES (hero OS diagram) ══
+const OS_NODES = [
+  { t: 'Gmail',        a: -78  },
+  { t: 'Calendar',     a: -30  },
+  { t: 'Outlook',      a: 18   },
+  { t: 'SAMpaigns',    a: 66   },
+  { t: 'Notetakers',   a: 114  },
+  { t: 'Enrichment',   a: 162  },
+  { t: 'LinkedIn',     a: 210  },
+  { t: 'Market intel', a: 258  },
+];
 
-<section class="sec">
-  <div class="container">
-    <div class="split split--wide-l">
-      <div class="reveal">
-        <span class="sec-label">The Path</span>
-        <h3>Where the thesis came from.</h3>
-        <p>Every conviction in this product traces back to a specific failure that cost real revenue.</p>
-        <div style="display:flex;flex-direction:column;gap:1.5rem;margin-top:1.75rem">
-          <div style="display:flex;gap:1.25rem">
-            <div style="font-family:var(--mono);font-size:.66rem;color:var(--gold);flex-shrink:0;width:62px;padding-top:.2rem">2014&ndash;16</div>
-            <div><strong style="display:block;font-size:.95rem;margin-bottom:.25rem">Accenture &middot; Analyst</strong><span style="font-size:.86rem;color:var(--dusk);line-height:1.6">Oracle apps developer and requirement gatherer. Liaising with clients taught me solutions were never about tech today and savings tomorrow. They were about transparency today and concrete decisions for growth tomorrow.</span></div>
-          </div>
-          <div style="display:flex;gap:1.25rem">
-            <div style="font-family:var(--mono);font-size:.66rem;color:var(--gold);flex-shrink:0;width:62px;padding-top:.2rem">2018&ndash;20</div>
-            <div><strong style="display:block;font-size:.95rem;margin-bottom:.25rem">Global expansion &middot; Fortune 500</strong><span style="font-size:.86rem;color:var(--dusk);line-height:1.6">An MBA added the business lens. Opening Fortune 500 logos and new geographies was the thrill. Owning a region with a best-in-class MEDDPIC framework was the training.</span></div>
-          </div>
-          <div style="display:flex;gap:1.25rem">
-            <div style="font-family:var(--mono);font-size:.66rem;color:var(--gold);flex-shrink:0;width:62px;padding-top:.2rem">2021&ndash;26</div>
-            <div><strong style="display:block;font-size:.95rem;margin-bottom:.25rem">Enterprise scale &middot; 0&rarr;1 to 10&rarr;100+</strong><span style="font-size:.86rem;color:var(--dusk);line-height:1.6">After 100+ enterprise deals and records broken every month, quarter and year, team quotas exposed a different problem: bad CRM data, broken forecasts, reps drowning in admin. The signal gap was costing real revenue.</span></div>
-          </div>
-          <div style="display:flex;gap:1.25rem">
-            <div style="font-family:var(--mono);font-size:.66rem;color:var(--gold);flex-shrink:0;width:62px;padding-top:.2rem">2026+</div>
-            <div><strong style="display:block;font-size:.95rem;margin-bottom:.25rem">Samora Global</strong><span style="font-size:.86rem;color:var(--dusk);line-height:1.6">The thesis: rebuild the pipeline from verified signals rather than human entry. Then absorb the scattered tools around it into one operating system.</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="reveal">
-        <div class="mock">
-          <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div><span class="mock-title">WHAT 12 YEARS TAUGHT HIM</span></div>
-          <div class="mock-body">
-            <div class="bf-row"><span class="bf-num">1</span><div><strong>GTM fails at the data layer first.</strong> Not strategy, not people. The data driving decisions is wrong from the start, because a human entered it while avoiding a CRM update.</div></div>
-            <div class="bf-row"><span class="bf-num">2</span><div><strong>Reps are not the problem.</strong> They are trapped in a system that punishes real work in favour of data entry. Fix verification and the work becomes the data.</div></div>
-            <div class="bf-row"><span class="bf-num">3</span><div><strong>New regions fail predictably.</strong> No ICP, no honest pipeline, no feedback loop. The playbook lands but the signals never come back.</div></div>
-            <div class="bf-row"><span class="bf-num">4</span><div><strong>Deals die in the gap</strong> between what was logged and what actually happened. Three-tier verification closes it permanently.</div></div>
-            <div class="bf-row"><span class="bf-num">5</span><div><strong>The next decade belongs to signal infrastructure.</strong> AI is only as good as the signals it reads. Build the verification layer first.</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+function buildOrbit() {
+  const box = document.getElementById('osViz');
+  if (!box) return;
+  const w = box.clientWidth, h = box.clientHeight;
+  const cx = w / 2, cy = h / 2;
+  const rx = Math.min(w * 0.42, 230), ry = Math.min(h * 0.40, 165);
 
-<section class="sec sec--dark">
-  <div class="container container--narrow center">
-    <span class="sec-label reveal">The Vision</span>
-    <h2 class="sec-h reveal">This is what comes<br/><em>after the CRM.</em></h2>
-    <p class="sec-p sec-p--c reveal">Every email sent, call taken, note scribbled and priority logged already existed. All of it unstructured, siloed, speaking to nobody. The rep did not know if they had done enough. The manager had no feedback beyond &ldquo;do more.&rdquo; The board looked at a forecast built on hope.</p>
-    <p class="sec-p sec-p--c reveal">Samora makes that reality structured, verified and intelligent &mdash; then absorbs the tools that were each solving one slice of it. One operating system. One truth. Every role.</p>
-  </div>
-</section>
-<section class="cta-band">
-  <div class="container">
-    <h2 class="reveal">Come see whether the thesis holds on your pipeline.</h2>
-    <p class="reveal">A free thirty-minute Signal Audit. No deck, no pitch. Just your data, scored honestly.</p>
-    <div class="cta-btns reveal">
-      <a href="/audit" class="btn btn--gold">Get Your Audit &rarr;</a>
-      <a href="/contact" class="btn btn--ghost">Book a call</a>
-    </div>
-  </div>
-</section>
-<footer class="footer">
-  <div class="container">
-    <div class="ft">
-      <div>
-        <div class="flogo">SAMORA</div>
-        <p style="font-size:.84rem">The operating system for revenue teams.</p>
-        <p class="ftag">VERIFIED &middot; HONEST &middot; REALISED</p>
-      </div>
-      <div class="fnav">
-        <div class="fnc"><div class="fnh">PLATFORM</div><a href="/daily-command">Daily Command</a><a href="/sampaigns">SAMpaigns</a><a href="/pipeline">Pipeline</a><a href="/intelligence">Intelligence</a><a href="/samagic">SAMagic</a></div>
-        <div class="fnc"><div class="fnh">COMPANY</div><a href="/why-samora">Why Samora</a><a href="/about">About</a><a href="/contact">Contact</a></div>
-        <div class="fnc"><div class="fnh">GET STARTED</div><a href="/audit">Signal Audit</a><a href="https://samoratrack.vercel.app" target="_blank" rel="noopener">Open SamoraTrack</a></div>
-      </div>
-    </div>
-    <div class="fbtm"><span>&copy; 2026 Samora Global</span><span>samoraglobal.com</span></div>
-  </div>
-</footer>
+  OS_NODES.forEach((n, i) => {
+    const rad = (n.a * Math.PI) / 180;
+    const x = cx + Math.cos(rad) * rx;
+    const y = cy + Math.sin(rad) * ry;
 
-<div class="toast" id="toast"><span>&#10003;</span> We'll be in touch within one business day.</div>
-<script src="js/main.js?v=2"></script>
-</body>
-</html>
+    const el = document.createElement('div');
+    el.className = 'os-node';
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.transform = 'translate(-50%,-50%)';
+    el.style.animationDelay = (0.5 + i * 0.09) + 's';
+    el.innerHTML = '<b></b>' + n.t;
+    box.appendChild(el);
+
+    // connector line to core
+    const dx = cx - x, dy = cy - y;
+    const len = Math.sqrt(dx * dx + dy * dy) - 66;
+    const ang = (Math.atan2(dy, dx) * 180) / Math.PI;
+    const ln = document.createElement('div');
+    ln.className = 'os-line';
+    ln.style.left = x + 'px';
+    ln.style.top = y + 'px';
+    ln.style.width = Math.max(len, 0) + 'px';
+    ln.style.transform = 'rotate(' + ang + 'deg)';
+    ln.style.opacity = '0';
+    ln.style.transition = 'opacity .8s ' + (0.7 + i * 0.09) + 's';
+    box.appendChild(ln);
+    requestAnimationFrame(() => { ln.style.opacity = '1'; });
+  });
+}
+
+// ══ TOOL STRIP ══
+const TOOLS = ['Gmail','Google Calendar','Outlook','Microsoft Graph','SmartReach','Outreach','Apollo','Lusha','Lemlist','Fireflies','Read.ai','Otter','Gong','Zoom','LinkedIn','WhatsApp','Salesforce','HubSpot','Pipedrive','Zoho','Gemini'];
+
+function buildStrip() {
+  const track = document.getElementById('stripTrack');
+  if (!track) return;
+  const html = TOOLS.map(t => '<span class="strip-item">' + t + '</span>').join('');
+  track.innerHTML = html + html; // duplicate for seamless loop
+}
+
+// ══ COUNT UP ══
+function animNum(el, target, sfx, dur) {
+  let s = null;
+  (function step(ts) {
+    if (!s) s = ts;
+    const p = Math.min((ts - s) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(e * target) + (sfx || '');
+    if (p < 1) requestAnimationFrame(step);
+  })(performance.now());
+}
+
+// ══ TABS ══
+function initTabs() {
+  document.querySelectorAll('[data-tabgroup]').forEach(group => {
+    const name = group.dataset.tabgroup;
+    group.querySelectorAll('.tab-b').forEach(btn => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.tab-b').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+        document.querySelectorAll('.tp[data-group="' + name + '"]').forEach(p => p.classList.remove('on'));
+        const panel = document.querySelector('.tp[data-group="' + name + '"][data-panel="' + btn.dataset.panel + '"]');
+        if (panel) panel.classList.add('on');
+      });
+    });
+  });
+}
+
+// ══ BOOT ══
+document.addEventListener('DOMContentLoaded', () => {
+
+  // nav scroll state
+  const nav = document.getElementById('nav');
+  if (nav && !nav.classList.contains('nav--solid')) {
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 30);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  // burger
+  const burger = document.getElementById('burger');
+  const mnav = document.getElementById('mnav');
+  let open = false;
+  burger?.addEventListener('click', () => {
+    open = !open;
+    mnav?.classList.toggle('open', open);
+    const s = burger.querySelectorAll('span');
+    if (open) {
+      s[0].style.transform = 'translateY(6.5px) rotate(45deg)';
+      s[1].style.opacity = '0';
+      s[2].style.transform = 'translateY(-6.5px) rotate(-45deg)';
+    } else {
+      s.forEach(x => { x.style.transform = ''; x.style.opacity = ''; });
+    }
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  // smooth anchors
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      if (id === '#') return;
+      const t = document.querySelector(id);
+      if (!t) return;
+      e.preventDefault();
+      window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
+    });
+  });
+
+  // reveals
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const parent = entry.target.closest('.pgrid,.statband,.roles,.flow,.grid2');
+      const delay = parent ? [...parent.querySelectorAll('.reveal')].indexOf(entry.target) * 70 : 0;
+      setTimeout(() => entry.target.classList.add('visible'), Math.max(delay, 0));
+      ro.unobserve(entry.target);
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => {
+    const hero = el.closest('.hero, .phead');
+    if (hero) {
+      const i = [...hero.querySelectorAll('.reveal')].indexOf(el);
+      setTimeout(() => el.classList.add('visible'), 150 + i * 110);
+    } else {
+      ro.observe(el);
+    }
+  });
+
+  // stat counters
+  const band = document.querySelector('.statband');
+  if (band) {
+    let done = false;
+    const so = new IntersectionObserver(e => {
+      if (e[0].isIntersecting && !done) {
+        done = true;
+        document.querySelectorAll('.sn[data-target]').forEach(el => {
+          animNum(el, parseFloat(el.dataset.target), el.dataset.sfx || '', 1500);
+        });
+        so.disconnect();
+      }
+    }, { threshold: 0.4 });
+    so.observe(band);
+  }
+
+  buildOrbit();
+  buildStrip();
+  initTabs();
+
+  // contact form
+  const form = document.getElementById('contactForm');
+  const toast = document.getElementById('toast');
+  form?.addEventListener('submit', e => {
+    e.preventDefault();
+    const b = form.querySelector('button[type="submit"]');
+    const label = b.textContent;
+    b.textContent = 'Sending…';
+    b.disabled = true;
+    // Show the real reason rather than a bare "Try again". Someone told their
+    // email was rejected can fix it; someone shown "Try again" leaves.
+    const err = (msg) => {
+      let m = form.querySelector('.form-err');
+      if (!m) {
+        m = document.createElement('p');
+        m.className = 'fnote form-err';
+        m.style.color = '#c4453a';
+        b.insertAdjacentElement('afterend', m);
+      }
+      m.textContent = msg || '';
+    };
+    err('');
+
+    // Posts to our own /api/contact, which STORES the enquiry before it tries
+    // to email anyone. This used to post to
+    // https://formspree.io/f/YOUR_FORM_ID, the placeholder from Formspree's
+    // docs, which was never filled in. Every enquiry ever submitted 404'd and
+    // was lost.
+    const payload = Object.fromEntries(new FormData(form).entries());
+    // Which form this was, so enquiries can be told apart later.
+    payload.source = (location.pathname.split('/').pop() || 'index').replace('.html', '') || 'index';
+
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(async res => {
+      const data = await res.json().catch(() => ({}));
+      b.disabled = false;
+      if (res.ok && data.ok) {
+        form.reset();
+        b.textContent = label;
+        toast?.classList.add('show');
+        setTimeout(() => toast?.classList.remove('show'), 4500);
+      } else {
+        b.textContent = 'Try again';
+        err(data.error || 'Something went wrong. Please email vasu@samoraglobal.com.');
+      }
+    }).catch(() => {
+      b.disabled = false;
+      b.textContent = 'Try again';
+      err('Could not reach the server. Please email vasu@samoraglobal.com.');
+    });
+  });
+});
+
+// rebuild orbit on resize
+let rt;
+window.addEventListener('resize', () => {
+  clearTimeout(rt);
+  rt = setTimeout(() => {
+    const box = document.getElementById('osViz');
+    if (!box) return;
+    box.querySelectorAll('.os-node,.os-line').forEach(n => n.remove());
+    buildOrbit();
+  }, 250);
+});
