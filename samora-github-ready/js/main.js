@@ -685,16 +685,24 @@ window.addEventListener('resize', () => {
   if (!box || !svg) return;
 
   const VW = 340, VH = 470, CX = 170;
-  const TOP = 42, NECK = 296, STEM = 348;      // y positions
+  const TOP = 40, NECK = 292, STEM = 324;      // y positions
   const HW_TOP = 152, HW_NECK = 26;            // half-widths
   const hw = y => HW_TOP + (HW_NECK - HW_TOP) * ((y - TOP) / (NECK - TOP));
 
+  // Plain English, not product vocabulary. "Scout / Enrich / Draft" are what we
+  // call the steps internally; a founder reading this for the first time should
+  // not have to translate.
+  //
+  // SCHEDULE was also dropped as a band. Scheduling filters nothing: 100 drafts
+  // become 100 sends, so it produced two identical numbers in a row and made
+  // the funnel look broken. A funnel band has to remove something. Replies and
+  // meetings do, so they take its place and every number now decreases.
   const STAGES = [
-    { k: 'SCOUT',    n: 2000, d: 'contacts at target accounts' },
-    { k: 'ENRICH',   n: 640,  d: 'verified email and role' },
-    { k: 'DRAFT',    n: 100,  d: 'carry a live signal' },
-    { k: 'SCHEDULE', n: 100,  d: 'queued, safe pace' },
-    { k: 'VERIFY',   n: 6,    d: 'replies, back as signal' }
+    { k: 'FIND THE PEOPLE',    n: 2000 },
+    { k: 'LEARN WHO THEY ARE', n: 640 },
+    { k: 'WRITE TO EACH ONE',  n: 100 },
+    { k: 'REPLIES',            n: 6 },
+    { k: 'MEETINGS',           n: 5 }
   ];
   const BAND = (NECK - TOP) / STAGES.length;
   const NS = 'http://www.w3.org/2000/svg';
@@ -702,32 +710,31 @@ window.addEventListener('resize', () => {
     for (const k in a) n.setAttribute(k, a[k]); return n; };
 
   // ── bands ────────────────────────────────────────────────────────────────
+  // Label and number are CENTRED and stacked, not pinned to the walls.
+  // The previous version anchored them to the band's TOP half-width while
+  // drawing them at the band's MIDDLE, where the funnel is 13px narrower on
+  // each side. Every label therefore hung outside the wall, worst at the
+  // bottom where there is least room. Centring removes the class of bug: there
+  // is no edge to miss.
   STAGES.forEach((st, i) => {
     const y0 = TOP + i * BAND, y1 = y0 + BAND;
     const a = hw(y0), b = hw(y1);
     svg.appendChild(el('path', {
       d: `M${CX-a} ${y0} L${CX+a} ${y0} L${CX+b} ${y1} L${CX-b} ${y1} Z`,
-      // Later bands are hotter: volume falls, value concentrates.
       fill: `rgba(200,150,62,${0.05 + i * 0.045})`,
       stroke: `rgba(232,201,122,${0.18 + i * 0.07})`, 'stroke-width': 1
     }));
     const my = y0 + BAND / 2;
-    const kt = el('text', { x: CX - a + 12, y: my + 1, fill: '#C9973E',
-      'font-family': 'DM Mono, monospace', 'font-size': 9.5, 'letter-spacing': 1.2 });
-    kt.textContent = st.k; svg.appendChild(kt);
-    const nt = el('text', { x: CX + a - 12, y: my + 3, fill: '#FAF8F4', 'text-anchor': 'end',
-      'font-family': 'EB Garamond, serif', 'font-size': 17, 'data-n': st.n });
-    nt.textContent = '0'; nt.classList.add('fnl-num'); svg.appendChild(nt);
-    if (i < 2) {   // only the wide bands have room for the descriptor
-      const dt = el('text', { x: CX, y: my + 16, fill: '#8A8478', 'text-anchor': 'middle',
-        'font-family': 'DM Sans, sans-serif', 'font-size': 8.5 });
-      dt.textContent = st.d; svg.appendChild(dt);
-    }
+    const kt = el('text', { x: CX, y: my - 5, fill: '#C9973E', 'text-anchor': 'middle',
+      'font-family': 'DM Mono, monospace', 'font-size': 8.5, 'letter-spacing': 1.4 });
+    kt.textContent = st.k;
+    svg.appendChild(kt);
+    const nt = el('text', { x: CX, y: my + 14, fill: '#FAF8F4', 'text-anchor': 'middle',
+      'font-family': 'EB Garamond, serif', 'font-size': 18, 'data-n': st.n });
+    nt.textContent = '0';
+    nt.classList.add('fnl-num');
+    svg.appendChild(nt);
   });
-  // stem
-  svg.appendChild(el('path', { d: `M${CX-HW_NECK} ${NECK} L${CX-HW_NECK} ${STEM} M${CX+HW_NECK} ${NECK} L${CX+HW_NECK} ${STEM}`,
-    stroke: 'rgba(232,201,122,.55)', 'stroke-width': 1, fill: 'none' }));
-
   const nums = [...svg.querySelectorAll('.fnl-num')];
   const fmt = v => v.toLocaleString('en-US');
   const CYCLE = 15000;                       // ms for one fill
