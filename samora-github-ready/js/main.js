@@ -42,8 +42,18 @@ const OS_SOURCES = [
 function buildOrbit() {
   const box = document.getElementById('osViz');
   if (!box) return;
-  const w = box.clientWidth, h = box.clientHeight;
-  if (!w || !h) return;
+  // THIS IS WHY THE DIAGRAM VANISHED ON PHONES.
+  // The mobile CSS sets the container to height:auto so the cards can flow as a
+  // grid. At the moment this runs the container is still EMPTY, so its height
+  // is 0, and the old guard `if (!w || !h) return` bailed out and built nothing.
+  // The layout rule and the build guard were each reasonable and together they
+  // silently removed the whole section.
+  //
+  // Height is only needed to place things on an ellipse, and on mobile the CSS
+  // overrides those positions anyway, so a fallback is harmless. Width is the
+  // one measurement worth refusing on: without it there is nothing to lay out.
+  const w = box.clientWidth, h = box.clientHeight || 400;
+  if (!w) return;
   const cx = w / 2, cy = h / 2;
   const small = w < 560;
 
