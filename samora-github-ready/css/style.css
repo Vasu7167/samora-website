@@ -171,8 +171,12 @@ em{font-style:italic}
 /* ══ LOGO / TOOL STRIP ══ */
 .strip{background:var(--dc);padding:1.5rem 0;overflow:hidden;border-top:1px solid var(--dr);border-bottom:1px solid var(--dr)}
 .strip-lbl{text-align:center;font-family:var(--mono);font-size:.6rem;letter-spacing:.22em;color:var(--ash);margin-bottom:1rem}
-.strip-track{display:flex;gap:2.5rem;animation:slide 40s linear infinite;white-space:nowrap;width:max-content}
-@keyframes slide{to{transform:translateX(-50%)}}
+/* will-change and translateZ(0) promote this to its own compositing layer.
+   iOS Safari is far more willing to run an animation on a promoted layer;
+   without it, a transform animation on an intrinsically sized flex row can
+   simply never start, while desktop Safari runs it happily. */
+.strip-track{display:flex;gap:2.5rem;animation:slide 40s linear infinite;white-space:nowrap;width:max-content;will-change:transform;backface-visibility:hidden}
+@keyframes slide{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
 .strip-item{font-family:var(--mono);font-size:.78rem;color:#8B857A;letter-spacing:.06em;display:flex;align-items:center;gap:.5rem}
 .strip-item::after{content:'';width:3px;height:3px;border-radius:50%;background:var(--gold);opacity:.5}
 
@@ -479,7 +483,7 @@ em{font-style:italic}
    per row, no descriptions, no core, no rings: about 170px instead of 1400px.
    The descriptions live on the pages these link to, one tap away. */
 @media(max-width:700px){
-  .os-viz{height:auto!important;display:grid;grid-template-columns:1fr 1fr;gap:.55rem;padding:0}
+  .os-viz{height:auto!important;min-height:2px;display:grid;grid-template-columns:1fr 1fr;gap:.55rem;padding:0}
   /* Decoration that only carries meaning in the round. */
   .os-core,.os-ring,.os-line,.os-flow,.os-src,.os-hint{display:none!important}
   /* JS writes left/top inline for the orbit, so this has to outrank it. */
