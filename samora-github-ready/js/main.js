@@ -111,7 +111,8 @@ function buildOrbit() {
   // cannot be forgotten again.
   box.querySelectorAll('.os-src,.os-spoke,.os-line,.os-flow,.os-hint,.os-node').forEach(n => n.remove());
   const cx = w / 2, cy = h / 2;
-  const small = w < 560;
+  // Chips get smaller rather than fewer when the ellipse is short of room.
+  box.classList.toggle('os-viz--tight', w < 640);
 
   // radii
   const irx = Math.min(w * 0.335, 215), iry = Math.min(h * 0.315, 165);
@@ -123,7 +124,15 @@ function buildOrbit() {
     const rad = (n.a * Math.PI) / 180;
     const x = cx + Math.cos(rad) * orx;
     const y = cy + Math.sin(rad) * ory;
-    if (small && i % 2) return; // thin out on small screens
+    // The old rule here was `if (small && i % 2) return`, which DROPPED every
+    // other chip once the container fell below 560px. On a 1000px window the
+    // orbit column is about 450px, so half the sources silently disappeared:
+    // Calendar, SmartReach, Lusha, Notetakers, Salesforce, Zoho and Market
+    // intel were all gone, which is exactly the set reported missing.
+    //
+    // Naming the tools a buyer already pays for is the whole point of the ring,
+    // so none are dropped. When space is tight they shrink instead, via the
+    // os-viz--tight class set below.
     const el = document.createElement('div');
     el.className = 'os-src';
     el.style.left = x + 'px';
