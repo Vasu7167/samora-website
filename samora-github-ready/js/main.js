@@ -22,11 +22,21 @@ const OS_SPOKES = [
 ];
 
 // Outer ring: the sources it absorbs.
+// Angles chosen to sit in the GAPS between the five spokes, never behind them.
+// The spokes are at -90, -18, 54, 126 and 198, so the gaps centre on -54, 18,
+// 90, 162 and 234. Two sources per gap at ±16 degrees keeps every chip at least
+// 20 degrees clear of a feature card.
+//
+// The old angles included Gmail at -118 against a spoke at -90, and WhatsApp at
+// 188 against a spoke at 198. Those chips rendered UNDERNEATH the cards, showing
+// as "G..." and "Wha..." — which is most of the unfinished feeling: it was not
+// missing detail, it was detail hidden behind something else.
 const OS_SOURCES = [
-  { t: 'Gmail', a: -118 }, { t: 'Calendar', a: -72 }, { t: 'Outlook', a: -38 },
-  { t: 'SmartReach', a: 8 }, { t: 'Notetakers', a: 40 }, { t: 'Lusha', a: 82 },
-  { t: 'Apollo', a: 112 }, { t: 'LinkedIn', a: 152 }, { t: 'WhatsApp', a: 188 },
-  { t: 'Market intel', a: 226 },
+  { t: 'Gmail', a: -70 }, { t: 'Calendar', a: -38 },
+  { t: 'Outlook', a: 2 }, { t: 'SmartReach', a: 34 },
+  { t: 'Notetakers', a: 74 }, { t: 'Lusha', a: 106 },
+  { t: 'Apollo', a: 146 }, { t: 'LinkedIn', a: 178 },
+  { t: 'WhatsApp', a: 218 }, { t: 'Market intel', a: 250 },
 ];
 
 function buildOrbit() {
@@ -118,7 +128,12 @@ function buildOrbit() {
 
   const hint = document.createElement('div');
   hint.className = 'os-hint';
-  hint.textContent = 'HOVER A SYSTEM TO EXPLORE';
+  // A touch device has no hover, so telling a phone user to hover is an
+  // instruction they cannot follow. On touch the cards are expanded already,
+  // so the honest instruction is "tap".
+  hint.textContent = window.matchMedia('(hover:none)').matches
+    ? 'TAP A SYSTEM TO EXPLORE'
+    : 'HOVER A SYSTEM TO EXPLORE';
   box.appendChild(hint);
 }
 
