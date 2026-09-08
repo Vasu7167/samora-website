@@ -668,116 +668,112 @@ window.addEventListener('resize', () => {
   }, 1100);
 })();
 
-// ══ HERO FUNNEL (SAMpaigns) ════════════════════════════════════════════════
-// Contacts fall in at the wide top; most hit the wall and fade, a few carry a
-// real signal and make it through the neck into the tray. The counter and the
-// clock run together so the claim in the headline is demonstrated rather than
-// asserted: 100 leads, under 100 seconds.
+
+// ══ STAGED, ANIMATED FUNNEL (SAMpaigns hero) ═══════════════════════════════
+// Five labelled bands drawn to real trapezoid geometry, with contacts falling
+// through them. Rejected contacts fade out AT the band that rejects them, so
+// the picture shows filtering rather than funnelling.
 //
-// Driven by requestAnimationFrame, not CSS keyframes. Same reasoning as the
-// marquee: rAF is the animation path proven to run on this project's iOS
-// Safari, and it also lets the counter stay in step with the particles.
+// The counts on the bands are the honest ones (2,000 -> 640 -> 100 -> 100 -> 6).
+// The particle pass-through rate is not: at the true 0.3% almost nothing would
+// reach the bottom and the animation would read as broken. The dots carry the
+// SHAPE of the argument, the numbers carry its precision.
 (function funnel() {
   const box = document.getElementById('fnl');
-  if (!box) return;
-  const out = document.getElementById('fnlCount');
-  const clock = document.getElementById('fnlTimer');
+  const svg = document.getElementById('fnlSvg');
+  const money = document.getElementById('fnlMoney');
+  if (!box || !svg) return;
 
-  // Geometry in the SVG's own coordinate space, converted to percentages so it
-  // tracks the box at any size rather than needing a pixel measurement.
-  const VW = 320, VH = 430;
-  const MOUTH_Y = 34, NECK_Y = 236, TRAY_Y = 322;
-  const LEFT = 18, RIGHT = 302, NECK_L = 138, NECK_R = 182;
+  const VW = 340, VH = 470, CX = 170;
+  const TOP = 42, NECK = 296, STEM = 348;      // y positions
+  const HW_TOP = 152, HW_NECK = 26;            // half-widths
+  const hw = y => HW_TOP + (HW_NECK - HW_TOP) * ((y - TOP) / (NECK - TOP));
 
-  const TARGET = 100;                 // leads
-  const SPAN   = 94;                  // seconds, so "under 100" is honest
-  let done = 0, started = performance.now(), finished = false;
+  const STAGES = [
+    { k: 'SCOUT',    n: 2000, d: 'contacts at target accounts' },
+    { k: 'ENRICH',   n: 640,  d: 'verified email and role' },
+    { k: 'DRAFT',    n: 100,  d: 'carry a live signal' },
+    { k: 'SCHEDULE', n: 100,  d: 'queued, safe pace' },
+    { k: 'VERIFY',   n: 6,    d: 'replies, back as signal' }
+  ];
+  const BAND = (NECK - TOP) / STAGES.length;
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (t, a) => { const n = document.createElementNS(NS, t);
+    for (const k in a) n.setAttribute(k, a[k]); return n; };
+
+  // ── bands ────────────────────────────────────────────────────────────────
+  STAGES.forEach((st, i) => {
+    const y0 = TOP + i * BAND, y1 = y0 + BAND;
+    const a = hw(y0), b = hw(y1);
+    svg.appendChild(el('path', {
+      d: `M${CX-a} ${y0} L${CX+a} ${y0} L${CX+b} ${y1} L${CX-b} ${y1} Z`,
+      // Later bands are hotter: volume falls, value concentrates.
+      fill: `rgba(200,150,62,${0.05 + i * 0.045})`,
+      stroke: `rgba(232,201,122,${0.18 + i * 0.07})`, 'stroke-width': 1
+    }));
+    const my = y0 + BAND / 2;
+    const kt = el('text', { x: CX - a + 12, y: my + 1, fill: '#C9973E',
+      'font-family': 'DM Mono, monospace', 'font-size': 9.5, 'letter-spacing': 1.2 });
+    kt.textContent = st.k; svg.appendChild(kt);
+    const nt = el('text', { x: CX + a - 12, y: my + 3, fill: '#FAF8F4', 'text-anchor': 'end',
+      'font-family': 'EB Garamond, serif', 'font-size': 17, 'data-n': st.n });
+    nt.textContent = '0'; nt.classList.add('fnl-num'); svg.appendChild(nt);
+    if (i < 2) {   // only the wide bands have room for the descriptor
+      const dt = el('text', { x: CX, y: my + 16, fill: '#8A8478', 'text-anchor': 'middle',
+        'font-family': 'DM Sans, sans-serif', 'font-size': 8.5 });
+      dt.textContent = st.d; svg.appendChild(dt);
+    }
+  });
+  // stem
+  svg.appendChild(el('path', { d: `M${CX-HW_NECK} ${NECK} L${CX-HW_NECK} ${STEM} M${CX+HW_NECK} ${NECK} L${CX+HW_NECK} ${STEM}`,
+    stroke: 'rgba(232,201,122,.55)', 'stroke-width': 1, fill: 'none' }));
+
+  const nums = [...svg.querySelectorAll('.fnl-num')];
+  const fmt = v => v.toLocaleString('en-US');
+  const CYCLE = 15000;                       // ms for one fill
+  const TARGET = 1000000;                    // 5 meetings x $200k ACV
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // No motion: state the end result rather than an empty funnel.
-    out.textContent = TARGET;
-    clock.textContent = SPAN.toFixed(1) + 's';
+    nums.forEach(n => { n.textContent = fmt(+n.getAttribute('data-n')); });
+    money.textContent = '$1.0M';
     return;
   }
 
-  const pct = (x, y) => ({ l: (x / VW) * 100, t: (y / VH) * 100 });
-
   function spawn() {
-    // Roughly one in four carries a signal. The rest are drawn deliberately:
-    // a funnel that passes everything is not a filter, and this product's
-    // whole argument is the filtering.
-    const keep = Math.random() < 0.26;
+    const keep = Math.random() < 0.17;
+    const exit = keep ? 5 : 1 + Math.floor(Math.random() * 4);   // which band rejects it
     const d = document.createElement('div');
-    d.className = 'fnl-dot' + (keep ? '' : ' fnl-dot--drop');
+    d.className = 'fnl-dot' + (keep ? '' : ' fnl-dot--out');
     box.appendChild(d);
-
-    const x0 = LEFT + 12 + Math.random() * (RIGHT - LEFT - 24);
-    const dur = 1500 + Math.random() * 1100;
+    const x0 = CX + (Math.random() * 2 - 1) * (HW_TOP - 18);
+    const yEnd = keep ? STEM : TOP + exit * BAND;
+    const dur = 2600 + Math.random() * 1400;
     const t0 = performance.now();
-    // A rejected contact stops partway down the wall, where the funnel would
-    // actually exclude it.
-    const stopAt = keep ? 1 : 0.34 + Math.random() * 0.24;
-
     (function step(now) {
       if (!d.isConnected) return;
       const t = Math.min((now - t0) / dur, 1);
-      if (t >= stopAt && !keep) { d.remove(); return; }
-
-      let x, y, o = 1;
-      if (t < 0.30) {                                   // falling in
-        y = -10 + (MOUTH_Y + 6 + 10) * (t / 0.30);
-        x = x0;
-        o = Math.min(t / 0.08, 1);
-      } else if (t < 0.72) {                            // converging down the wall
-        const k = (t - 0.30) / 0.42;
-        y = MOUTH_Y + 6 + (NECK_Y - MOUTH_Y - 6) * k;
-        const half = (RIGHT - LEFT) / 2, neckHalf = (NECK_R - NECK_L) / 2;
-        const centre = VW / 2;
-        x = centre + ((x0 - centre) / half) * (half + (neckHalf - half) * k);
-      } else {                                          // through the neck
-        const k = (t - 0.72) / 0.28;
-        y = NECK_Y + (TRAY_Y - NECK_Y) * k;
-        x = VW / 2 + (x0 - VW / 2) * 0.06 * (1 - k);
-        o = 1 - k * 0.15;
-      }
-
-      const p = pct(x, y);
-      d.style.left = p.l + '%';
-      d.style.top = p.t + '%';
-      d.style.opacity = String(o);
-
-      if (t >= 1) {
-        d.remove();
-        if (keep && done < TARGET) { done++; out.textContent = done; }
-        return;
-      }
+      const y = -14 + (yEnd + 14) * t;
+      // Converge toward the axis in proportion to how far the walls have closed.
+      const k = Math.max(0, Math.min((y - TOP) / (NECK - TOP), 1));
+      const x = CX + (x0 - CX) * (hw(Math.max(y, TOP)) / HW_TOP);
+      d.style.left = (x / VW) * 100 + '%';
+      d.style.top = (y / VH) * 100 + '%';
+      d.style.opacity = String(t > 0.9 ? (1 - t) * 10 * (keep ? 1 : 0.6) : (keep ? 1 : 0.55));
+      if (t >= 1) { d.remove(); return; }
       requestAnimationFrame(step);
     })(t0);
   }
 
-  // Emission rate paced so the tray fills in roughly SPAN seconds.
-  let last = performance.now(), acc = 0;
-  const perSec = (TARGET / 0.26) / SPAN;
+  let startAt = performance.now(), last = startAt, acc = 0;
   (function tick(now) {
-    const dt = Math.min((now - last) / 1000, 0.1);
-    last = now;
-    if (!finished) {
-      const elapsed = (now - started) / 1000;
-      clock.textContent = Math.min(elapsed, SPAN).toFixed(1) + 's';
-      if (done >= TARGET) {
-        finished = true;
-        clock.textContent = SPAN.toFixed(1) + 's';
-        // Hold the finished state for a beat, then run it again so a visitor
-        // arriving mid-cycle still sees the whole story.
-        setTimeout(() => {
-          done = 0; out.textContent = '0';
-          started = performance.now(); finished = false;
-        }, 3200);
-      } else {
-        acc += dt * perSec;
-        while (acc >= 1) { spawn(); acc -= 1; }
-      }
-    }
+    const dt = Math.min((now - last) / 1000, 0.1); last = now;
+    const p = Math.min((now - startAt) / CYCLE, 1);
+    const e = 1 - Math.pow(1 - p, 2);
+    nums.forEach(n => { n.textContent = fmt(Math.round(+n.getAttribute('data-n') * e)); });
+    money.textContent = p >= 1 ? '$1.0M'
+      : '$' + (Math.round(TARGET * e / 1000) * 1000 / 1000000).toFixed(2) + 'M';
+    if (p < 1) { acc += dt * 26; while (acc >= 1) { spawn(); acc -= 1; } }
+    else if (now - startAt > CYCLE + 4500) { startAt = now; }   // hold, then run again
     requestAnimationFrame(tick);
-  })(last);
+  })(startAt);
 })();
