@@ -536,8 +536,19 @@ em{font-style:italic}
      lines to positions that no longer exist. Those go. The emblem stays, at a
      size that reads as a light source rather than an empty circle. */
   .os-ring,.os-line,.os-flow,.os-src,.os-hint{display:none!important}
+  /* position:RELATIVE, not static. The core's halo and pulsing ring are
+     absolutely positioned pseudo-elements. Making the core static removed it
+     as their containing block, so they resolved against .hero instead and
+     `inset:-11px` became a ring inset 11px from the whole hero: that is the
+     giant ellipse cutting through the cards. Relative keeps it in normal flow
+     for the grid while still anchoring its own pseudo-elements. */
   .os-core{
-    position:static;transform:none;grid-column:1 / -1;
+    /* inset:auto is essential. The base rule is position:absolute with
+       top:50%;left:50%. Switching to relative WITHOUT clearing those turns them
+       into relative OFFSETS, so the core shifts half the container right and
+       down and ends up hanging off the edge. Relative anchors its halo and
+       ring; inset:auto keeps it where the grid puts it. */
+    position:relative;inset:auto;transform:none;grid-column:1 / -1;
     width:108px;height:108px;margin:0 auto 1.1rem;
     box-shadow:0 0 70px rgba(200,150,62,.42),0 0 24px rgba(232,201,122,.22)}
   .os-core-s{font-size:2.15rem}
