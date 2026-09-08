@@ -132,14 +132,34 @@ em{font-style:italic}
    element that is itself four times smaller. Phones get their own keyframes
    with real amplitude and a shorter cycle. */
 @media(max-width:700px){
-  .hero-glow{width:125vw;height:125vw;top:-15%;right:-30%;animation:driftM 13s ease-in-out infinite}
-  .hero-glow--2{width:115vw;height:115vw;bottom:-25%;left:-35%;animation:driftM2 17s ease-in-out infinite}
+  /* CORRECTION. The first attempt at this blew the glow up to 125vw to get
+     visible travel out of a percentage translate. That worked and ruined the
+     look: a radial gradient stretched to 125vw has such a long falloff that it
+     reads as a flat brown wash rather than a glow, so the nebula appeared to
+     vanish. Bigger is not brighter, it is flatter.
+
+     The fix is to stop expressing the movement as a percentage of the element.
+     Translating in vw makes the distance travelled independent of how large the
+     glow is, so the glow can stay at a size where its falloff still reads. */
+  /* Intensity, not just size. The desktop glow is ~1000px wide, so even at .16
+     alpha there is a lot of lit area and the eye reads a light source. The same
+     alpha across 340px is a faint tint you can miss entirely. Phones get a
+     stronger centre and a tighter falloff so it reads as a glow rather than a
+     smudge. If it is too much, the two alpha values below are the dial. */
+  .hero-glow{width:88vw;height:88vw;top:-14%;right:-16%;
+    background:radial-gradient(circle,rgba(160,117,42,.28),transparent 58%);
+    animation:driftM 14s ease-in-out infinite}
+  .hero-glow--2{width:78vw;height:78vw;bottom:-20%;left:-22%;
+    background:radial-gradient(circle,rgba(232,201,122,.15),transparent 56%);
+    animation:driftM2 19s ease-in-out infinite}
   /* Same reasoning: the marquee crosses far fewer pixels per second on a
      narrow screen, so it reads as stalled. */
   .strip-track{animation-duration:20s}
 }
-@keyframes driftM{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-17%,13%) scale(1.28)}}
-@keyframes driftM2{0%,100%{transform:translate(0,0) scale(1.12)}50%{transform:translate(19%,-11%) scale(.86)}}
+/* vw, not %. About 39px of travel on a 390px screen, plus a real change of
+   size, and it stays that regardless of how the glow is dimensioned. */
+@keyframes driftM{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-10vw,7vw) scale(1.18)}}
+@keyframes driftM2{0%,100%{transform:translate(0,0) scale(1.1)}50%{transform:translate(9vw,-6vw) scale(.9)}}
 .hero-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,#000,transparent)}
 .hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:3.5rem;align-items:center;width:100%}
 @media(max-width:1000px){.hero-inner{grid-template-columns:1fr;gap:3rem}.hero{min-height:auto}}
