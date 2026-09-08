@@ -68,8 +68,14 @@ function buildOrbit() {
   // overlap, because the geometry is identical to the desktop one that already
   // works. The container's height is set to the scaled height so it takes only
   // the room it actually occupies.
+  // Keyed on the VIEWPORT, not on the container. box.clientWidth is measured
+  // before the hero grid has settled, so on desktop it can briefly report a
+  // narrow value: that put the desktop into the scaled branch, which pinned the
+  // column to 720px, crushed the headline into one word per line and shrank the
+  // diagram. window.innerWidth is stable from the first frame and is the same
+  // thing the CSS breakpoints test.
   const STAGE_W = 720, STAGE_H = 430;
-  const scaled = w < 700;
+  const scaled = window.innerWidth < 700;
   if (scaled) {
     const s = w / STAGE_W;
     box.style.width = STAGE_W + 'px';
@@ -79,7 +85,14 @@ function buildOrbit() {
     box.style.marginBottom = (STAGE_H * s - STAGE_H) + 'px';   // reclaim the gap
     w = STAGE_W; h = STAGE_H;
   } else {
-    box.style.width = box.style.height = box.style.transform = box.style.marginBottom = '';
+    // Clear individually. A chained assignment sets them all to the SAME value,
+    // which works here but reads as if it might not, and one wrong link in the
+    // chain would silently leave a stale inline width behind.
+    box.style.width = '';
+    box.style.height = '';
+    box.style.transform = '';
+    box.style.transformOrigin = '';
+    box.style.marginBottom = '';
   }
 
   // ── Remove what a previous build left behind ──────────────────────────────
