@@ -54,6 +54,22 @@ function buildOrbit() {
   // one measurement worth refusing on: without it there is nothing to lay out.
   const w = box.clientWidth, h = box.clientHeight || 400;
   if (!w) return;
+
+  // ── Remove what a previous build left behind ──────────────────────────────
+  // This function APPENDS, and the resize handler only cleaned up '.os-node'
+  // and '.os-line' — two classes the current build does not even create. So
+  // every rebuild added another full set of spokes.
+  //
+  // It was invisible until today: while the spokes were absolutely positioned,
+  // the duplicates stacked exactly on top of each other. The moment mobile laid
+  // them out as a static grid, every copy took its own row and the page filled
+  // with repeating cards.
+  //
+  // And on iOS the resize event fires constantly, because collapsing the URL
+  // bar while scrolling changes the viewport height. So simply scrolling the
+  // page kept adding copies. Clearing here rather than in the caller means it
+  // cannot be forgotten again.
+  box.querySelectorAll('.os-src,.os-spoke,.os-line,.os-flow,.os-hint,.os-node').forEach(n => n.remove());
   const cx = w / 2, cy = h / 2;
   const small = w < 560;
 
@@ -122,6 +138,9 @@ function buildOrbit() {
         const dur = 2600 + Math.random() * 1800;
         const start = performance.now() + Math.random() * 2200;
         (function frame(now) {
+          // Each rebuild used to leave its particle loops running against
+          // removed nodes, so the loops accumulated for the life of the page.
+          if (!p.isConnected) return;
           const t = (now - start) / dur;
           if (t < 0) { requestAnimationFrame(frame); return; }
           if (t >= 1) { travel(); return; }
@@ -422,13 +441,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // rebuild orbit on resize
-let rt;
+let rt, lastOrbitW = window.innerWidth;
 window.addEventListener('resize', () => {
   clearTimeout(rt);
   rt = setTimeout(() => {
     const box = document.getElementById('osViz');
     if (!box) return;
-    box.querySelectorAll('.os-node,.os-line').forEach(n => n.remove());
-    buildOrbit();
+    // Width is the only thing the layout depends on. On iOS the URL bar
+    // collapsing while you scroll fires resize with a new HEIGHT many times a
+    // second; rebuilding on those is pure waste and was how the duplicate
+    // cards multiplied so fast.
+    if (window.innerWidth === lastOrbitW) return;
+    lastOrbitW = window.innerWidth;
+    buildOrbit();   // clears its own previous output
   }, 250);
 });
