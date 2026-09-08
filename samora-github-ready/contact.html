@@ -62,57 +62,62 @@
   </div>
 </section>
 
-<section class="sec">
+<section class="sec sec--tight">
   <div class="container container--narrow">
-    <div class="split" style="align-items:flex-start">
-      <div class="reveal">
-        <h3>What happens after you send</h3>
-        <p>Vasu reads it and replies himself, within one business day. No automated sequence, no drip campaign, no sales development rep working a cadence. We sell a product that exposes coverage theatre, so it would be strange to run any on you.</p>
-        <div class="csteps mt2">
-          <div class="cst"><div class="csn">1</div><div><strong>Signal Integrity Audit</strong><span>30 minutes &middot; free &middot; no deck</span></div></div>
-          <div class="cst"><div class="csn">2</div><div><strong>Verified Pipeline Blueprint</strong><span>Custom to your stack &middot; 2 weeks</span></div></div>
-          <div class="cst"><div class="csn">3</div><div><strong>Full deployment</strong><span>5-week sprint</span></div></div>
-        </div>
+    <div class="center" style="margin-bottom:2.25rem">
+      <h3 class="reveal" style="margin-bottom:.6rem">What happens after you send</h3>
+      <p class="sec-p sec-p--c reveal" style="margin-bottom:0">Vasu reads it and replies himself, within one business day. No automated sequence, no drip campaign, no sales development rep working a cadence. We sell a product that exposes coverage theatre, so it would be strange to run any on you.</p>
+    </div>
+    <div class="csteps csteps--row reveal">
+      <div class="cst"><div class="csn">1</div><div><strong>Signal Integrity Audit</strong><span>30 minutes &middot; free &middot; no deck</span></div></div>
+      <div class="cst"><div class="csn">2</div><div><strong>Verified Pipeline Blueprint</strong><span>Custom to your stack &middot; 2 weeks</span></div></div>
+      <div class="cst"><div class="csn">3</div><div><strong>Full deployment</strong><span>5-week sprint</span></div></div>
+    </div>
+    <div class="calt reveal">
+      <a href="mailto:vasu@samoraglobal.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6h17v12h-17zM3.5 6.5l8.5 6 8.5-6"/></svg>
+        <span><strong>vasu@samoraglobal.com</strong><span>Write directly, if you would rather not use a form</span></span>
+      </a>
+      <a href="/audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>
+        <span><strong>Book the Signal Audit instead</strong><span>Skip the conversation, go straight to the 30 minutes</span></span>
+      </a>
+    </div>
+  </div>
+</section>
 
-        <div class="calt">
-          <a href="mailto:vasu@samoraglobal.com">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6h17v12h-17zM3.5 6.5l8.5 6 8.5-6"/></svg>
-            <span><strong>vasu@samoraglobal.com</strong><span>Write directly, if you would rather not use a form</span></span>
-          </a>
-          <a href="/audit">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>
-            <span><strong>Book the Signal Audit instead</strong><span>Skip the conversation, go straight to the 30 minutes</span></span>
-          </a>
-        </div>
+<section class="sec sec--dark">
+  <div class="container container--narrow">
+    <div id="formLive" aria-live="polite">
+      <div class="center" style="margin-bottom:2.5rem">
+        <span class="sec-label reveal">Send a message</span>
+        <h2 class="sec-h reveal">Tell us what is going wrong.</h2>
+        <p class="sec-p sec-p--c reveal">Name and work email are all we need. Everything else helps us prepare, and you can skip it.</p>
       </div>
-      <div class="reveal">
-        <div class="fcard">
-          <div id="formLive" aria-live="polite">
-          <h3 class="fcard-h">Send a message</h3>
-          <p class="fcard-s">Name and email are all that is needed. Everything else helps us prepare, and you can skip it.</p>
-          <form id="contactForm" novalidate>
-            <div class="fgrid">
-              <div class="fg"><label for="cName">Full name</label><input id="cName" type="text" name="name" autocomplete="name" required placeholder="Your name" /></div>
-              <div class="fg"><label for="cEmail">Work email</label><input id="cEmail" type="email" name="email" autocomplete="email" inputmode="email" required placeholder="work@company.com" /></div>
-            </div>
-            <div class="fgrid">
-              <div class="fg"><label for="cCompany">Company <span class="fopt">optional</span></label><input id="cCompany" type="text" name="company" autocomplete="organization" placeholder="Company name" /></div>
-              <div class="fg"><label for="cPhone">Phone <span class="fopt">optional</span></label><input id="cPhone" type="tel" name="phone" inputmode="tel" autocomplete="tel" placeholder="+91 98765 43210" aria-describedby="cPhoneHelp" /><span class="fhelp" id="cPhoneHelp">With country code. Only if you would rather we called.</span></div>
-            </div>
-            <div class="fg"><label for="cMsg">What would you like to talk about? <span class="fopt">optional</span></label><textarea id="cMsg" name="message" rows="4" placeholder="A sentence is plenty. &ldquo;Our forecast keeps missing and nobody can say why&rdquo; is a perfect brief."></textarea></div>
-            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"
-                   style="position:absolute;left:-9999px;opacity:0;height:0;width:0" placeholder="Leave empty" />
-            <button type="submit" class="btn btn--gold btn--full">Send message</button>
-            <div class="ftrust">
-              <span><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg>Never sold or shared</span>
-              <span><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Reply within one business day</span>
-              <span><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>No newsletter, no sequence</span>
-            </div>
-            <p class="fpriv">By sending this you agree we may contact you about your enquiry. See our <a href="/privacy">Privacy Policy</a>.</p>
-          </form>
-          </div>
+      <form id="contactForm" novalidate class="reveal">
+        <div class="grid2">
+          <div class="fg"><label for="cName">Full name</label><input id="cName" type="text" name="name" autocomplete="name" required placeholder="Your name" /></div>
+          <div class="fg"><label for="cEmail">Work email</label><input id="cEmail" type="email" name="email" autocomplete="email" inputmode="email" required placeholder="work@company.com" /></div>
         </div>
-      </div>
+        <div class="grid2">
+          <div class="fg"><label for="cCompany">Company <span class="fopt">optional</span></label><input id="cCompany" type="text" name="company" autocomplete="organization" placeholder="Company name" /></div>
+          <div class="fg"><label for="cPhone">Phone <span class="fopt">optional</span></label><input id="cPhone" type="tel" name="phone" inputmode="tel" autocomplete="tel" placeholder="+91 98765 43210" aria-describedby="cPhoneHelp" /><span class="fhelp" id="cPhoneHelp">With country code. Only if you would rather we called.</span></div>
+        </div>
+        <div class="grid2">
+          <div class="fg"><label for="cTeam">Team size <span class="fopt">optional</span></label><select id="cTeam" name="teamsize"><option value="">Select</option><option>1&ndash;5 reps</option><option>6&ndash;20 reps</option><option>21&ndash;50 reps</option><option>50+ reps</option></select></div>
+          <div class="fg"><label for="cChal">Biggest GTM challenge <span class="fopt">optional</span></label><select id="cChal" name="challenge"><option value="">Select one</option><option>Pipeline predictability and forecast accuracy</option><option>Coverage verification, logged versus verified</option><option>Too many disconnected tools</option><option>ICP identification and targeting</option><option>Expanding into new regions</option><option>CRM data quality and rep adoption</option><option>Multi-product opportunity tracking</option><option>Something else</option></select></div>
+        </div>
+        <div class="fg"><label for="cMsg">What would you like to talk about? <span class="fopt">optional</span></label><textarea id="cMsg" name="message" rows="5" placeholder="A sentence is plenty. &ldquo;Our forecast keeps missing and nobody can say why&rdquo; is a perfect brief."></textarea></div>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"
+               style="position:absolute;left:-9999px;opacity:0;height:0;width:0" placeholder="Leave empty" />
+        <button type="submit" class="btn btn--gold btn--full">Send message</button>
+        <div class="ftrust">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg>Never sold or shared</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Reply within one business day</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>No newsletter, no sequence</span>
+        </div>
+        <p class="fpriv">By sending this you agree we may contact you about your enquiry. See our <a href="/privacy">Privacy Policy</a>.</p>
+      </form>
     </div>
   </div>
 </section>
