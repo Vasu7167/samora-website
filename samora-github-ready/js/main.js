@@ -456,3 +456,128 @@ window.addEventListener('resize', () => {
     buildOrbit();   // clears its own previous output
   }, 250);
 });
+
+// ══ DIAGNOSTIC OVERLAY ══════════════════════════════════════════════════════
+// Only runs with ?debug=1 in the URL. Nobody else ever sees it.
+//
+// Four rounds of changes to the mobile hero have each been judged from a
+// screenshot, which cannot show whether an animation is running, whether a
+// media query matched, or what the browser actually computed. This prints the
+// answers onto the page so one screenshot settles it.
+(function diag() {
+  if (!/[?&]debug=1/.test(location.search)) return;
+  const val = (sel, prop) => {
+    const el = document.querySelector(sel);
+    if (!el) return sel + ' MISSING';
+    return prop + '=' + getComputedStyle(el)[prop];
+  };
+  const box = document.createElement('div');
+  box.style.cssText =
+    'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#000;color:#0f0;' +
+    'font:11px/1.5 ui-monospace,monospace;padding:10px 12px;white-space:pre-wrap;' +
+    'max-height:52vh;overflow:auto;border-top:2px solid #0f0';
+  const track = document.querySelector('.strip-track');
+  const lines = [
+    'viewport      ' + window.innerWidth + ' x ' + window.innerHeight,
+    'dpr           ' + window.devicePixelRatio,
+    'reduced-motion ' + matchMedia('(prefers-reduced-motion: reduce)').matches,
+    'mq <=700px    ' + matchMedia('(max-width:700px)').matches,
+    'hover:none    ' + matchMedia('(hover:none)').matches,
+    '--- marquee ---',
+    val('.strip-track', 'animationName'),
+    val('.strip-track', 'animationDuration'),
+    val('.strip-track', 'animationPlayState'),
+    val('.strip-track', 'width'),
+    'children      ' + (track ? track.children.length : 'n/a'),
+    '--- nebula ---',
+    val('.hero-glow', 'width'),
+    val('.hero-glow', 'animationName'),
+    val('.hero-glow', 'animationDuration'),
+    val('.hero-glow', 'backgroundImage').slice(0, 90),
+    val('.hero-glow', 'opacity'),
+    val('.hero-glow', 'display'),
+    '--- build ---',
+    'spokes        ' + document.querySelectorAll('.os-spoke').length + ' (expect 5)',
+    'css/js ver    ' + (document.querySelector('link[href*="style.css"]') || {}).getAttribute('href')
+  ];
+  // Sampled twice, a second apart. If the transform changes between the two,
+  // the animation IS running and the problem is that it is too subtle to see.
+  const t0 = track ? getComputedStyle(track).transform : 'n/a';
+  setTimeout(() => {
+    const t1 = track ? getComputedStyle(track).transform : 'n/a';
+    lines.push('--- is it moving? ---', 't+0s  ' + t0, 't+1s  ' + t1,
+               'MOVING: ' + (t0 !== t1));
+    box.textContent = lines.join('\n');
+  }, 1000);
+  box.textContent = 'sampling...';
+  document.body.appendChild(box);
+})();
+
+// ══ MOTION FALLBACK: DRIVE IT IF CSS WILL NOT ══════════════════════════════
+// The previous version of this was gated on a max-width media query and read
+// the track width once, at parse time. Two ways for that to silently do
+// nothing: the strip is populated by buildStrip() AFTER this runs, so the width
+// was 0 and the marquee branch never engaged; and any mismatch in how the
+// breakpoint is evaluated skips it entirely.
+//
+// This version does not guess. It WATCHES the marquee for a second, and if the
+// CSS animation has not moved it, takes over with requestAnimationFrame — the
+// one animation mechanism already proven to run on the phone, since the orbit's
+// signal particles have used it throughout. Width is re-read every frame until
+// it is non-zero, so it cannot start too early.
+//
+// Because it is detection rather than a breakpoint, it also covers desktop if
+// the same thing ever happens there.
+(function motionFallback() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const track = document.getElementById('stripTrack');
+  const glow1 = document.querySelector('.hero-glow:not(.hero-glow--2)');
+  const glow2 = document.querySelector('.hero-glow--2');
+  if (!track && !glow1) return;
+
+  const sample = () => (track ? getComputedStyle(track).transform : '');
+  const before = sample();
+
+  setTimeout(() => {
+    // If the transform changed on its own, CSS is animating it. Leave it alone.
+    if (track && sample() !== before) return;
+
+    if (track) track.style.animation = 'none';
+    if (glow1) glow1.style.animation = 'none';
+    if (glow2) glow2.style.animation = 'none';
+
+    const SPEED = 45;                     // px per second
+    let half = 0, x = 0, last = performance.now();
+    const vw = () => window.innerWidth / 100;
+
+    (function frame(now) {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+
+      if (track) {
+        // Re-read until the strip has been populated and laid out.
+        if (!half) half = track.scrollWidth / 2;
+        if (half > 0) {
+          x = (x + SPEED * dt) % half;
+          track.style.transform = 'translate3d(' + (-x) + 'px,0,0)';
+        }
+      }
+
+      const t = now / 1000;
+      if (glow1) {
+        const p = Math.sin(t / 7);
+        glow1.style.transform =
+          'translate3d(' + (p * -5 * vw()) + 'px,' + (Math.cos(t / 9) * 3.5 * vw()) + 'px,0) ' +
+          'scale(' + (1 + p * 0.09) + ')';
+      }
+      if (glow2) {
+        const q = Math.sin(t / 11 + 1.2);
+        glow2.style.transform =
+          'translate3d(' + (q * 4.5 * vw()) + 'px,' + (Math.cos(t / 8) * -3 * vw()) + 'px,0) ' +
+          'scale(' + (1 - q * 0.07) + ')';
+      }
+      requestAnimationFrame(frame);
+    })(performance.now());
+  }, 1100);
+})();
