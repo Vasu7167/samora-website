@@ -74,7 +74,7 @@ function buildOrbit() {
   // column to 720px, crushed the headline into one word per line and shrank the
   // diagram. window.innerWidth is stable from the first frame and is the same
   // thing the CSS breakpoints test.
-  const STAGE_W = 720, STAGE_H = 430;
+  const STAGE_W = 720, STAGE_H = 470;
   const scaled = window.innerWidth < 700;
   if (scaled) {
     const s = w / STAGE_W;
@@ -115,9 +115,13 @@ function buildOrbit() {
   box.classList.toggle('os-viz--tight', w < 640);
 
   // radii
-  const irx = Math.min(w * 0.335, 215), iry = Math.min(h * 0.315, 165);
-  const orx = Math.min(w * 0.475, 320), ory = Math.min(h * 0.455, 250);
-  const coreR = 78;
+  // Radii nudged up so the whole arrangement reads larger. The horizontal
+  // multipliers move least, because the orbit column is the narrow dimension
+  // and pushing chips further out is what risks them clipping the gutter.
+  // Most of the gain comes from the taller stage feeding the vertical radii.
+  const irx = Math.min(w * 0.355, 245), iry = Math.min(h * 0.325, 195);
+  const orx = Math.min(w * 0.492, 350), ory = Math.min(h * 0.468, 288);
+  const coreR = 90;
 
   // ── outer source chips ──
   OS_SOURCES.forEach((n, i) => {
