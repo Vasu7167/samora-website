@@ -462,25 +462,36 @@ em{font-style:italic}
 .os-viz:hover .os-src{color:#948E82;border-color:rgba(160,117,42,.35)}
 
 /* ── FLOW PARTICLES ── */
-/* ── Small screens: an orbit is the wrong shape ────────────────────────────
-   The diagram was a desktop layout squeezed onto a phone. Five absolutely
-   positioned cards plus ten chips cannot fit 375px: they overlapped each other,
-   ran off both edges, and "Pipeline" rendered as "eline". Expanding the cards
-   for touch made it worse.
+/* ── Small screens: the orbit becomes a compact index ──────────────────────
+   Two failed attempts here, so the reasoning is worth keeping.
 
-   Below 700px it stops being a diagram and becomes what the diagram was trying
-   to say: the core, then the five systems, in a readable column. Same content,
-   same links, no truncation. The rings, chips, connector lines and particles
-   are decoration that only means anything in the round, so they go. */
+   First the desktop orbit was left in place and squeezed: five absolutely
+   positioned cards and ten chips inside 375px overlapped, ran off both edges,
+   and "Pipeline" rendered as "eline".
+
+   Then it was collapsed into a column, which fixed the overlap and created a
+   worse problem: a large empty core circle followed by five full-height cards,
+   pushing the hero's actual job (headline, promise, two buttons) far off
+   screen. Correct, and useless.
+
+   What the diagram COMMUNICATES is "five systems, one core". On a phone that
+   needs a compact index, not a portrait of a circle. Names and icons only, two
+   per row, no descriptions, no core, no rings: about 170px instead of 1400px.
+   The descriptions live on the pages these link to, one tap away. */
 @media(max-width:700px){
-  .os-viz{height:auto!important;display:flex;flex-direction:column;gap:.7rem;padding:0}
-  .os-ring,.os-line,.os-flow,.os-src,.os-hint{display:none}
-  .os-core{position:static;transform:none;margin:0 auto 1.1rem}
-  .os-core::before{display:none}
+  .os-viz{height:auto!important;display:grid;grid-template-columns:1fr 1fr;gap:.55rem;padding:0}
+  /* Decoration that only carries meaning in the round. */
+  .os-core,.os-ring,.os-line,.os-flow,.os-src,.os-hint{display:none!important}
   /* JS writes left/top inline for the orbit, so this has to outrank it. */
-  .os-spoke{position:static!important;left:auto!important;top:auto!important;transform:none!important;animation:none}
-  .os-spoke-in{width:100%!important}
-  .os-spoke:hover .os-spoke-in{transform:none;width:100%!important}
+  .os-spoke{position:static!important;left:auto!important;top:auto!important;transform:none!important;animation:none;z-index:auto}
+  .os-spoke-in{width:100%!important;padding:.7rem .75rem;border-radius:6px}
+  .os-spoke:hover .os-spoke-in{width:100%!important;transform:none}
+  .os-sp-d,.os-sp-go{display:none}
+  .os-sp-t{font-size:.86rem;white-space:normal}
+  .os-spoke-in::after{top:.6rem;right:.6rem;width:4px;height:4px}
+  /* Five items in a two-column grid: the last one takes the full width rather
+     than sitting alone against a gap. */
+  .os-spoke:last-of-type{grid-column:1 / -1}
 }
 
 @media(hover:none){
