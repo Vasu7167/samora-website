@@ -759,28 +759,21 @@ em{font-style:italic}
 .ar--out .ar-v small{color:#9C958A}
 .arith-note{font-size:.78rem;color:var(--ash);line-height:1.6;font-style:italic}
 
-/* ══ HERO FUNNEL (SAMpaigns) ═══════════════════════════════════════════════
-   Raw contacts fall in at the top, the funnel narrows them to the ones with a
-   real signal, and qualified leads land in the tray. The particles are driven
-   by requestAnimationFrame in main.js rather than CSS keyframes, for the same
-   reason the marquee is: rAF is the one animation path that has proven
-   reliable on iOS Safari here. */
-.phead--split{padding-bottom:3rem}
-.phead--split .container{display:grid;grid-template-columns:1.05fr .95fr;gap:3rem;align-items:center}
-@media(max-width:900px){.phead--split .container{grid-template-columns:1fr;gap:2rem}}
-.fnl{position:relative;height:430px;width:100%;max-width:400px;margin:0 auto}
-@media(max-width:900px){.fnl{height:340px;max-width:320px}}
-.fnl svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.fnl-dot{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--gpl);
-  box-shadow:0 0 7px rgba(232,201,122,.85);pointer-events:none;opacity:0;will-change:transform}
-/* Rejected contacts fade out at the funnel wall rather than passing through:
-   the picture has to show filtering, not just funnelling. */
-.fnl-dot--drop{background:#6B6559;box-shadow:none;width:4px;height:4px}
-.fnl-cap{position:absolute;left:50%;transform:translateX(-50%);font-family:var(--mono);
-  font-size:.58rem;letter-spacing:.16em;color:var(--ash);white-space:nowrap;text-transform:uppercase}
-.fnl-cap--top{top:-6px}
-.fnl-cap--out{bottom:-8px;color:var(--gl)}
-.fnl-out{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);text-align:center}
-.fnl-out-n{font-family:var(--serif);font-size:2.9rem;line-height:1;color:var(--gpl)}
-.fnl-out-l{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;color:var(--ash);margin-top:.25rem}
-.fnl-t{position:absolute;right:0;top:0;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--gl)}
+/* ══ STAGED, ANIMATED FUNNEL (SAMpaigns hero) ══════════════════════════════ */
+.phead--split{padding-bottom:3.5rem}
+.phead--split .container{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+@media(max-width:960px){.phead--split .container{grid-template-columns:1fr;gap:2.25rem}}
+.fnl{position:relative;width:100%;max-width:430px;margin:0 auto;aspect-ratio:340/470}
+@media(max-width:960px){.fnl{max-width:360px}}
+.fnl svg{position:absolute;inset:0;width:100%;height:100%}
+.fnl-dot{position:absolute;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;
+  background:var(--gpl);box-shadow:0 0 7px rgba(232,201,122,.9);pointer-events:none;opacity:0}
+.fnl-dot--out{width:3.5px;height:3.5px;margin:-1.75px 0 0 -1.75px;background:#5F594E;box-shadow:none}
+.fnl-badge{position:absolute;top:0;right:0;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;
+  color:var(--gl);border:1px solid rgba(232,201,122,.32);border-radius:100px;padding:.22rem .7rem}
+.fnl-top{position:absolute;top:0;left:0;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;color:var(--ash)}
+.fnl-out{position:absolute;left:0;right:0;bottom:0;text-align:center}
+.fnl-out-n{font-family:var(--serif);font-size:2.9rem;line-height:1;
+  background:linear-gradient(180deg,var(--gpl),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.fnl-out-l{font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;color:var(--gl);margin-top:.3rem}
+.fnl-out-s{font-size:.68rem;color:var(--ash);margin-top:.35rem}
