@@ -686,7 +686,11 @@ window.addEventListener('resize', () => {
 
   const VW = 340, VH = 470, CX = 170;
   const TOP = 40, NECK = 292, STEM = 324;      // y positions
-  const HW_TOP = 152, HW_NECK = 26;            // half-widths
+  // HW_NECK 26 -> 46. At 26 the last band was 70px wide inside, too narrow for
+  // even a short phrase. 46 is the sharpest neck the copy clears with real
+  // slack (~14px); the cone still narrows more than 3x, so it still reads as
+  // a funnel.
+  const HW_TOP = 152, HW_NECK = 46;            // half-widths
   const hw = y => HW_TOP + (HW_NECK - HW_TOP) * ((y - TOP) / (NECK - TOP));
 
   // Plain English, not product vocabulary. "Scout / Enrich / Draft" are what we
@@ -697,12 +701,19 @@ window.addEventListener('resize', () => {
   // become 100 sends, so it produced two identical numbers in a row and made
   // the funnel look broken. A funnel band has to remove something. Replies and
   // meetings do, so they take its place and every number now decreases.
+  // Verb-first, one line, no subject. The panel is already Samora, so writing
+  // "Samora" into all five bands only made the reader read the same word five
+  // times. Dropping it is what let every band fit on a single line, which is
+  // the actual fix for "text heavy": fewer lines, not smaller type.
+  //
+  // SCHEDULE is not a band. Scheduling filters nothing (100 drafts become 100
+  // sends), so it printed the same number twice and made the funnel look broken.
   const STAGES = [
-    { k: 'FIND THE PEOPLE',    n: 2000 },
-    { k: 'LEARN WHO THEY ARE', n: 640 },
-    { k: 'WRITE TO EACH ONE',  n: 100 },
-    { k: 'REPLIES',            n: 6 },
-    { k: 'MEETINGS',           n: 5 }
+    { k: 'Finds your people',           n: 2000 },
+    { k: "SAM says who's worth it",     n: 640 },
+    { k: 'Reaches them where they are', n: 100 },
+    { k: 'Gets you replies',            n: 6 },
+    { k: 'Books the meetings',          n: 5 }
   ];
   const BAND = (NECK - TOP) / STAGES.length;
   const NS = 'http://www.w3.org/2000/svg';
@@ -725,11 +736,11 @@ window.addEventListener('resize', () => {
       stroke: `rgba(232,201,122,${0.18 + i * 0.07})`, 'stroke-width': 1
     }));
     const my = y0 + BAND / 2;
-    const kt = el('text', { x: CX, y: my - 5, fill: '#C9973E', 'text-anchor': 'middle',
-      'font-family': 'DM Mono, monospace', 'font-size': 8.5, 'letter-spacing': 1.4 });
+    const kt = el('text', { x: CX, y: my - 6, fill: '#D9A85A', 'text-anchor': 'middle',
+      'font-family': 'DM Sans, sans-serif', 'font-size': 9.6 });
     kt.textContent = st.k;
     svg.appendChild(kt);
-    const nt = el('text', { x: CX, y: my + 14, fill: '#FAF8F4', 'text-anchor': 'middle',
+    const nt = el('text', { x: CX, y: my + 13, fill: '#FAF8F4', 'text-anchor': 'middle',
       'font-family': 'EB Garamond, serif', 'font-size': 18, 'data-n': st.n });
     nt.textContent = '0';
     nt.classList.add('fnl-num');
