@@ -141,17 +141,39 @@ em{font-style:italic}
      The fix is to stop expressing the movement as a percentage of the element.
      Translating in vw makes the distance travelled independent of how large the
      glow is, so the glow can stay at a size where its falloff still reads. */
-  /* Intensity, not just size. The desktop glow is ~1000px wide, so even at .16
-     alpha there is a lot of lit area and the eye reads a light source. The same
-     alpha across 340px is a faint tint you can miss entirely. Phones get a
-     stronger centre and a tighter falloff so it reads as a glow rather than a
-     smudge. If it is too much, the two alpha values below are the dial. */
-  .hero-glow{width:88vw;height:88vw;top:-14%;right:-16%;
-    background:radial-gradient(circle,rgba(160,117,42,.28),transparent 58%);
-    animation:driftM 14s ease-in-out infinite}
-  .hero-glow--2{width:78vw;height:78vw;bottom:-20%;left:-22%;
-    background:radial-gradient(circle,rgba(232,201,122,.15),transparent 56%);
-    animation:driftM2 19s ease-in-out infinite}
+  /* ── Mobile nebula: bright core, defined falloff ────────────────────────
+     Earlier attempts failed in two opposite directions. Small and faint was
+     invisible. Huge (125vw) with a single colour stop had such a long falloff
+     it became a flat brown wash. The answer is a THREE stop gradient: a bright
+     centre, a mid tone that holds shape, then transparent. That keeps a
+     readable light source at any size.
+
+     Anchored to the top of the hero and horizontally centred so it cannot be
+     pushed off-screen by a negative offset the way it was before.
+
+     Motion is driven by JS on this breakpoint, see main.js, so no animation
+     property here. */
+  /* top:-30% put the BRIGHT CENTRE at 3% down the hero, i.e. behind the nav.
+     Only the faint outer edge of the gradient was ever on screen, which is why
+     it kept reading as "no nebula" however much the alpha was raised. The
+     centre now sits at 37% down, behind the headline. Arithmetic on a 390x800
+     phone: 8% of 800 = 64px top, plus half of 120vw (234px) = 298px. */
+  .hero-glow{
+    width:120vw;height:120vw;top:8%;left:50%;right:auto;margin-left:-60vw;
+    background:radial-gradient(circle,
+      rgba(232,201,122,.30) 0%,
+      rgba(180,130,48,.19) 26%,
+      rgba(139,35,21,.10) 48%,
+      transparent 66%);
+    animation:none}
+  .hero-glow--2{
+    width:100vw;height:100vw;top:auto;bottom:-12%;left:-18%;right:auto;margin-left:0;
+    background:radial-gradient(circle,
+      rgba(201,151,62,.18) 0%,
+      rgba(160,117,42,.10) 32%,
+      transparent 62%);
+    animation:none}
+  .strip-track{animation:none}
   /* Same reasoning: the marquee crosses far fewer pixels per second on a
      narrow screen, so it reads as stalled. */
   .strip-track{animation-duration:20s}
@@ -504,8 +526,26 @@ em{font-style:italic}
    The descriptions live on the pages these link to, one tap away. */
 @media(max-width:700px){
   .os-viz{height:auto!important;min-height:2px;display:grid;grid-template-columns:1fr 1fr;gap:.55rem;padding:0}
-  /* Decoration that only carries meaning in the round. */
-  .os-core,.os-ring,.os-line,.os-flow,.os-src,.os-hint{display:none!important}
+  /* THE CORE STAYS. I hid it for three rounds on the reasoning that it was
+     "decoration that only means anything in the round". It is not decoration:
+     the glowing core with its halo and pulsing ring IS the visual Vasu was
+     calling the nebula, and removing it is what made the phone look dead.
+
+     What genuinely does not survive the trip to a narrow screen is the
+     GEOMETRY: rings that need radius, chips placed on an ellipse, connector
+     lines to positions that no longer exist. Those go. The emblem stays, at a
+     size that reads as a light source rather than an empty circle. */
+  .os-ring,.os-line,.os-flow,.os-src,.os-hint{display:none!important}
+  .os-core{
+    position:static;transform:none;grid-column:1 / -1;
+    width:108px;height:108px;margin:0 auto 1.1rem;
+    box-shadow:0 0 70px rgba(200,150,62,.42),0 0 24px rgba(232,201,122,.22)}
+  .os-core-s{font-size:2.15rem}
+  .os-core-l{font-size:.48rem}
+  /* The halo and the pulsing ring are what make it read as lit rather than
+     drawn, so both are explicitly kept alive here. */
+  .os-core::before{display:block}
+  .os-core::after{inset:-11px}
   /* JS writes left/top inline for the orbit, so this has to outrank it. */
   .os-spoke{position:static!important;left:auto!important;top:auto!important;transform:none!important;animation:none;z-index:auto}
   .os-spoke-in{width:100%!important;padding:.7rem .75rem;border-radius:6px}
