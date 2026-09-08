@@ -74,7 +74,12 @@ function buildOrbit() {
   // column to 720px, crushed the headline into one word per line and shrank the
   // diagram. window.innerWidth is stable from the first frame and is the same
   // thing the CSS breakpoints test.
-  const STAGE_W = 720, STAGE_H = 470;
+  // 520, not 720. A uniform scale shrinks the TYPE as well as the geometry: at a
+  // 720 stage on a 390px phone the scale is 0.54, so a 0.94rem card label lands
+  // at 8px on screen. Unreadable, and exactly the "labels are too small" report.
+  // A 520 stage scales to 0.75, and the os-viz--scaled class below puts the
+  // type back up by the inverse so it renders at its intended size.
+  const STAGE_W = 520, STAGE_H = 470;
   const scaled = window.innerWidth < 700;
   if (scaled) {
     const s = w / STAGE_W;
@@ -83,6 +88,7 @@ function buildOrbit() {
     box.style.transformOrigin = 'top left';
     box.style.transform = 'scale(' + s + ')';
     box.style.marginBottom = (STAGE_H * s - STAGE_H) + 'px';   // reclaim the gap
+    box.classList.add('os-viz--scaled');
     w = STAGE_W; h = STAGE_H;
   } else {
     // Clear individually. A chained assignment sets them all to the SAME value,
@@ -93,6 +99,7 @@ function buildOrbit() {
     box.style.transform = '';
     box.style.transformOrigin = '';
     box.style.marginBottom = '';
+    box.classList.remove('os-viz--scaled');
   }
 
   // ── Remove what a previous build left behind ──────────────────────────────
