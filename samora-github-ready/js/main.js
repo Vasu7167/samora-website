@@ -667,3 +667,117 @@ window.addEventListener('resize', () => {
     })(performance.now());
   }, 1100);
 })();
+
+// ══ HERO FUNNEL (SAMpaigns) ════════════════════════════════════════════════
+// Contacts fall in at the wide top; most hit the wall and fade, a few carry a
+// real signal and make it through the neck into the tray. The counter and the
+// clock run together so the claim in the headline is demonstrated rather than
+// asserted: 100 leads, under 100 seconds.
+//
+// Driven by requestAnimationFrame, not CSS keyframes. Same reasoning as the
+// marquee: rAF is the animation path proven to run on this project's iOS
+// Safari, and it also lets the counter stay in step with the particles.
+(function funnel() {
+  const box = document.getElementById('fnl');
+  if (!box) return;
+  const out = document.getElementById('fnlCount');
+  const clock = document.getElementById('fnlTimer');
+
+  // Geometry in the SVG's own coordinate space, converted to percentages so it
+  // tracks the box at any size rather than needing a pixel measurement.
+  const VW = 320, VH = 430;
+  const MOUTH_Y = 34, NECK_Y = 236, TRAY_Y = 322;
+  const LEFT = 18, RIGHT = 302, NECK_L = 138, NECK_R = 182;
+
+  const TARGET = 100;                 // leads
+  const SPAN   = 94;                  // seconds, so "under 100" is honest
+  let done = 0, started = performance.now(), finished = false;
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // No motion: state the end result rather than an empty funnel.
+    out.textContent = TARGET;
+    clock.textContent = SPAN.toFixed(1) + 's';
+    return;
+  }
+
+  const pct = (x, y) => ({ l: (x / VW) * 100, t: (y / VH) * 100 });
+
+  function spawn() {
+    // Roughly one in four carries a signal. The rest are drawn deliberately:
+    // a funnel that passes everything is not a filter, and this product's
+    // whole argument is the filtering.
+    const keep = Math.random() < 0.26;
+    const d = document.createElement('div');
+    d.className = 'fnl-dot' + (keep ? '' : ' fnl-dot--drop');
+    box.appendChild(d);
+
+    const x0 = LEFT + 12 + Math.random() * (RIGHT - LEFT - 24);
+    const dur = 1500 + Math.random() * 1100;
+    const t0 = performance.now();
+    // A rejected contact stops partway down the wall, where the funnel would
+    // actually exclude it.
+    const stopAt = keep ? 1 : 0.34 + Math.random() * 0.24;
+
+    (function step(now) {
+      if (!d.isConnected) return;
+      const t = Math.min((now - t0) / dur, 1);
+      if (t >= stopAt && !keep) { d.remove(); return; }
+
+      let x, y, o = 1;
+      if (t < 0.30) {                                   // falling in
+        y = -10 + (MOUTH_Y + 6 + 10) * (t / 0.30);
+        x = x0;
+        o = Math.min(t / 0.08, 1);
+      } else if (t < 0.72) {                            // converging down the wall
+        const k = (t - 0.30) / 0.42;
+        y = MOUTH_Y + 6 + (NECK_Y - MOUTH_Y - 6) * k;
+        const half = (RIGHT - LEFT) / 2, neckHalf = (NECK_R - NECK_L) / 2;
+        const centre = VW / 2;
+        x = centre + ((x0 - centre) / half) * (half + (neckHalf - half) * k);
+      } else {                                          // through the neck
+        const k = (t - 0.72) / 0.28;
+        y = NECK_Y + (TRAY_Y - NECK_Y) * k;
+        x = VW / 2 + (x0 - VW / 2) * 0.06 * (1 - k);
+        o = 1 - k * 0.15;
+      }
+
+      const p = pct(x, y);
+      d.style.left = p.l + '%';
+      d.style.top = p.t + '%';
+      d.style.opacity = String(o);
+
+      if (t >= 1) {
+        d.remove();
+        if (keep && done < TARGET) { done++; out.textContent = done; }
+        return;
+      }
+      requestAnimationFrame(step);
+    })(t0);
+  }
+
+  // Emission rate paced so the tray fills in roughly SPAN seconds.
+  let last = performance.now(), acc = 0;
+  const perSec = (TARGET / 0.26) / SPAN;
+  (function tick(now) {
+    const dt = Math.min((now - last) / 1000, 0.1);
+    last = now;
+    if (!finished) {
+      const elapsed = (now - started) / 1000;
+      clock.textContent = Math.min(elapsed, SPAN).toFixed(1) + 's';
+      if (done >= TARGET) {
+        finished = true;
+        clock.textContent = SPAN.toFixed(1) + 's';
+        // Hold the finished state for a beat, then run it again so a visitor
+        // arriving mid-cycle still sees the whole story.
+        setTimeout(() => {
+          done = 0; out.textContent = '0';
+          started = performance.now(); finished = false;
+        }, 3200);
+      } else {
+        acc += dt * perSec;
+        while (acc >= 1) { spawn(); acc -= 1; }
+      }
+    }
+    requestAnimationFrame(tick);
+  })(last);
+})();
