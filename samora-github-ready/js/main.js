@@ -32,11 +32,14 @@ const OS_SPOKES = [
 // as "G..." and "Wha..." — which is most of the unfinished feeling: it was not
 // missing detail, it was detail hidden behind something else.
 const OS_SOURCES = [
-  { t: 'Gmail', a: -70 }, { t: 'Calendar', a: -38 },
-  { t: 'Outlook', a: 2 }, { t: 'SmartReach', a: 34 },
-  { t: 'Notetakers', a: 74 }, { t: 'Lusha', a: 106 },
-  { t: 'Apollo', a: 146 }, { t: 'LinkedIn', a: 178 },
-  { t: 'WhatsApp', a: 218 }, { t: 'Market intel', a: 250 },
+  // Five spokes sit 72 degrees apart at -90/-18/54/126/198, so the gaps centre
+  // on -54/18/90/162/234. Three chips per gap at -20/0/+20 keeps every chip at
+  // least 16 degrees clear of a card.
+  { t: 'Gmail',        a: -74 }, { t: 'Calendar',   a: -54 }, { t: 'Outlook',    a: -34 },
+  { t: 'SmartReach',   a:  -2 }, { t: 'Apollo',     a:  18 }, { t: 'Lusha',      a:  38 },
+  { t: 'Read.ai',      a:  70 }, { t: 'Notetakers', a:  90 }, { t: 'Claude',     a: 110 },
+  { t: 'Salesforce',   a: 142 }, { t: 'LinkedIn',   a: 162 }, { t: 'Zoho',       a: 182 },
+  { t: 'WhatsApp',     a: 214 }, { t: 'Market intel', a: 254 },
 ];
 
 function buildOrbit() {
@@ -52,8 +55,32 @@ function buildOrbit() {
   // Height is only needed to place things on an ellipse, and on mobile the CSS
   // overrides those positions anyway, so a fallback is harmless. Width is the
   // one measurement worth refusing on: without it there is nothing to lay out.
-  const w = box.clientWidth, h = box.clientHeight || 400;
+  let w = box.clientWidth, h = box.clientHeight || 400;
   if (!w) return;
+
+  // ── Narrow screens get the SAME diagram, scaled ───────────────────────────
+  // Previous attempts rebuilt this as a list or a grid of tiles, which lost the
+  // thing the picture exists to say: everything flows into one nucleus. The
+  // problem was never the composition, it was trying to fit a 720px arrangement
+  // into 390px of real estate.
+  //
+  // So lay it out at its natural size and scale it down uniformly. Nothing can
+  // overlap, because the geometry is identical to the desktop one that already
+  // works. The container's height is set to the scaled height so it takes only
+  // the room it actually occupies.
+  const STAGE_W = 720, STAGE_H = 430;
+  const scaled = w < 700;
+  if (scaled) {
+    const s = w / STAGE_W;
+    box.style.width = STAGE_W + 'px';
+    box.style.height = STAGE_H + 'px';
+    box.style.transformOrigin = 'top left';
+    box.style.transform = 'scale(' + s + ')';
+    box.style.marginBottom = (STAGE_H * s - STAGE_H) + 'px';   // reclaim the gap
+    w = STAGE_W; h = STAGE_H;
+  } else {
+    box.style.width = box.style.height = box.style.transform = box.style.marginBottom = '';
+  }
 
   // ── Remove what a previous build left behind ──────────────────────────────
   // This function APPENDS, and the resize handler only cleaned up '.os-node'
@@ -91,6 +118,32 @@ function buildOrbit() {
     el.style.animationDelay = (0.9 + i * 0.05) + 's';
     el.innerHTML = '<i></i>' + n.t;
     box.appendChild(el);
+
+    // A signal travelling from this source into the nucleus. Previously only
+    // the five product cards emitted these, which read as the product talking
+    // to itself. The picture is about everything OUTSIDE flowing in, so the
+    // sources are where the movement belongs.
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const dot = document.createElement('div');
+      dot.className = 'os-flow os-flow--src';
+      box.appendChild(dot);
+      const run = () => {
+        const dur = 3200 + Math.random() * 2600;
+        const start = performance.now() + Math.random() * 4200;
+        (function step(now) {
+          if (!dot.isConnected) return;
+          const t = (now - start) / dur;
+          if (t < 0) { requestAnimationFrame(step); return; }
+          if (t >= 1) { run(); return; }
+          const e = t * t * (3 - 2 * t);
+          dot.style.left = (x + (cx - x) * e * 0.9) + 'px';
+          dot.style.top  = (y + (cy - y) * e * 0.9) + 'px';
+          dot.style.opacity = String(Math.sin(t * Math.PI) * 0.75);
+          requestAnimationFrame(step);
+        })(performance.now());
+      };
+      run();
+    }
   });
 
   // ── inner feature spokes ──
