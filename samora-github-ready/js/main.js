@@ -259,8 +259,60 @@ document.addEventListener('DOMContentLoaded', () => {
   // contact form
   const form = document.getElementById('contactForm');
   const toast = document.getElementById('toast');
+
+  // ── Inline validation ────────────────────────────────────────────────────
+  // The form carries novalidate, so the browser says nothing. Previously the
+  // ONLY feedback was a single line under the button after a round trip to the
+  // server — so a typo in an email meant submitting, waiting, and then hunting
+  // for which field was wrong. Fields are checked on blur, and the error is
+  // shown against the field it belongs to.
+  //
+  // Only fields marked `required` are checked, so the audit form keeps its
+  // existing behaviour until it opts in the same way.
+  const fieldErr = (el, msg) => {
+    const wrap = el.closest('.fg') || el.parentElement;
+    let m = wrap.querySelector('.ferr');
+    if (msg) {
+      if (!m) { m = document.createElement('span'); m.className = 'ferr'; wrap.appendChild(m); }
+      m.textContent = msg;
+      el.classList.add('bad');
+      el.setAttribute('aria-invalid', 'true');
+    } else {
+      m?.remove();
+      el.classList.remove('bad');
+      el.removeAttribute('aria-invalid');
+    }
+  };
+  const checkField = (el) => {
+    const v = (el.value || '').trim();
+    if (el.hasAttribute('required') && !v) {
+      fieldErr(el, el.type === 'email' ? 'We need an email to reply to.' : 'This one is needed.');
+      return false;
+    }
+    if (el.type === 'email' && v && !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v)) {
+      fieldErr(el, 'That address looks incomplete. Check for a typo.');
+      return false;
+    }
+    fieldErr(el, '');
+    return true;
+  };
+  form?.querySelectorAll('input, textarea').forEach(el => {
+    if (el.name === 'website') return;                 // honeypot, never touched
+    el.addEventListener('blur', () => { if (el.value.trim() || el.hasAttribute('required')) checkField(el); });
+    // Clearing the error as soon as they start fixing it, rather than making
+    // them blur again to find out whether it is resolved.
+    el.addEventListener('input', () => { if (el.classList.contains('bad')) fieldErr(el, ''); });
+  });
+
   form?.addEventListener('submit', e => {
     e.preventDefault();
+
+    // Stop before the network call, and put the cursor in the first problem
+    // field so the fix takes one keystroke rather than a hunt.
+    const fields = [...form.querySelectorAll('input, textarea')].filter(el => el.name !== 'website');
+    const firstBad = fields.filter(el => !checkField(el))[0];
+    if (firstBad) { firstBad.focus(); firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+
     const b = form.querySelector('button[type="submit"]');
     const label = b.textContent;
     b.textContent = 'Sending…';
@@ -288,6 +340,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Which form this was, so enquiries can be told apart later.
     payload.source = (location.pathname.split('/').pop() || 'index').replace('.html', '') || 'index';
 
+    // ── Phone, normalised to E.164 only when we can be SURE ────────────────
+    // E.164 (+ country code + subscriber, digits only, max 15) is what every
+    // dialer and CRM expects, so it is worth storing that way. But it is only
+    // derivable when the visitor actually supplied a country code.
+    //
+    // We deliberately do NOT infer one from the page, the locale or the IP. A
+    // number stored under a guessed dial code looks callable and is not, which
+    // is worse than storing exactly what the person typed. Same rule as the
+    // rest of this product: never present a guess as a verified fact.
+    if (payload.phone) {
+      const raw = String(payload.phone).trim();
+      const digits = raw.replace(/\D/g, '');
+      payload.phone = (raw.charAt(0) === '+' && digits.length >= 8 && digits.length <= 15)
+        ? '+' + digits
+        : raw;
+    }
+
     fetch('/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -298,6 +367,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if (res.ok && data.ok) {
         form.reset();
         b.textContent = label;
+        // ── Replace the form, do not just flash a toast ────────────────────
+        // A toast is easy to miss, and a form still sitting there full of your
+        // details reads as "did that actually send?" — which is the moment
+        // people submit a second time. Swapping in a confirmation answers the
+        // question without being asked, and says what happens next.
+        const live = document.getElementById('formLive');
+        if (live) {
+          live.innerHTML =
+            '<div class="fdone">' +
+              '<div class="fdone-ic"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></div>' +
+              '<h4>Message received.</h4>' +
+              '<p>Vasu will reply from vasu@samoraglobal.com within one business day. If it has not arrived by then, check your spam folder before assuming we ignored you.</p>' +
+            '</div>';
+          live.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
         toast?.classList.add('show');
         setTimeout(() => toast?.classList.remove('show'), 4500);
       } else {
