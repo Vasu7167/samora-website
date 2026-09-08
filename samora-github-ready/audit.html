@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css?v=3" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23B8860B%22%2F%3E%3Cstop%20offset%3D%220.5%22%20stop-color%3D%22%23E8B84B%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23C8961E%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2213%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2246%22%20font-family%3D%22Georgia%2C%27Times%20New%20Roman%27%2Cserif%22%20font-size%3D%2242%22%20font-weight%3D%22700%22%20text-anchor%3D%22middle%22%20fill%3D%22%2315181D%22%3ES%3C%2Ftext%3E%3C%2Fsvg%3E" />
+<meta name="theme-color" content="#C8961E" />
 </head>
 <body>
 <nav class="nav nav--solid" id="nav">
@@ -27,6 +29,7 @@
       </div>
       <a href="/why-samora">Why Samora</a>
       <a href="/about">About</a>
+      <a href="/contact">Contact</a>
     </div>
     <a href="/audit" class="nav-cta">Get Your Audit</a>
     <button class="nav-burger" id="burger"><span></span><span></span><span></span></button>
@@ -45,6 +48,9 @@
   <a href="/about">About</a>
   <a href="/audit">Get Your Audit</a>
   <a href="/contact">Contact</a>
+  <div class="mnav-h">Legal</div>
+  <a href="/privacy">Privacy Policy</a>
+  <a href="/terms">Terms of Service</a>
 </div>
 <div class="spacer"></div>
 <section class="phead">
@@ -90,6 +96,7 @@
 
 <section class="sec sec--dark">
   <div class="container container--narrow">
+    <div id="formLive" aria-live="polite">
     <div class="center" style="margin-bottom:2.5rem">
       <span class="sec-label reveal">Request It</span>
       <h2 class="sec-h reveal">Book your Signal Audit.</h2>
@@ -97,21 +104,29 @@
     </div>
     <form id="contactForm" novalidate class="reveal">
       <div class="grid2">
-        <div class="fg"><label>Full name</label><input type="text" name="name" placeholder="Your name" /></div>
-        <div class="fg"><label>Company</label><input type="text" name="company" placeholder="Company name" /></div>
+        <div class="fg"><label for="aName">Full name</label><input id="aName" type="text" name="name" autocomplete="name" required placeholder="Your name" /></div>
+        <div class="fg"><label for="aEmail">Work email</label><input id="aEmail" type="email" name="email" autocomplete="email" inputmode="email" required placeholder="work@company.com" /></div>
       </div>
       <div class="grid2">
-        <div class="fg"><label>Work email</label><input type="email" name="email" placeholder="work@company.com" /></div>
-        <div class="fg"><label>Team size</label><select name="teamsize"><option value="">Select</option><option>1&ndash;5 reps</option><option>6&ndash;20 reps</option><option>21&ndash;50 reps</option><option>50+ reps</option></select></div>
+        <div class="fg"><label for="aCompany">Company <span class="fopt">optional</span></label><input id="aCompany" type="text" name="company" autocomplete="organization" placeholder="Company name" /></div>
+        <div class="fg"><label for="aPhone">Phone <span class="fopt">optional</span></label><input id="aPhone" type="tel" name="phone" inputmode="tel" autocomplete="tel" placeholder="+91 98765 43210" aria-describedby="aPhoneHelp" /><span class="fhelp" id="aPhoneHelp">With country code. Only if you would rather we called.</span></div>
       </div>
-      <div class="fg"><label>Biggest GTM challenge</label>
-        <select name="challenge"><option value="">Select one</option><option>Pipeline predictability and forecast accuracy</option><option>Coverage verification, logged versus verified</option><option>Too many disconnected tools</option><option>ICP identification and targeting</option><option>Expanding into new regions</option><option>CRM data quality and rep adoption</option><option>Multi-product opportunity tracking</option></select>
+      <div class="grid2">
+        <div class="fg"><label for="aTeam">Team size <span class="fopt">optional</span></label><select id="aTeam" name="teamsize"><option value="">Select</option><option>1&ndash;5 reps</option><option>6&ndash;20 reps</option><option>21&ndash;50 reps</option><option>50+ reps</option></select></div>
+        <div class="fg"><label for="aChal">Biggest GTM challenge <span class="fopt">optional</span></label><select id="aChal" name="challenge"><option value="">Select one</option><option>Pipeline predictability and forecast accuracy</option><option>Coverage verification, logged versus verified</option><option>Too many disconnected tools</option><option>ICP identification and targeting</option><option>Expanding into new regions</option><option>CRM data quality and rep adoption</option><option>Multi-product opportunity tracking</option><option>Something else</option></select></div>
       </div>
+      <div class="fg"><label for="aMsg">Anything we should know before the call? <span class="fopt">optional</span></label><textarea id="aMsg" name="message" rows="5" placeholder="Optional. What is going wrong, or what you want out of the 30 minutes."></textarea></div>
         <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"
                style="position:absolute;left:-9999px;opacity:0;height:0;width:0" placeholder="Leave empty" />
       <button type="submit" class="btn btn--gold btn--full">Request a Signal Audit</button>
-      <p class="fnote">No spam. No sequence. One human reply.</p>
+      <div class="ftrust">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg>Never sold or shared</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Reply within one business day</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>No newsletter, no sequence</span>
+      </div>
+      <p class="fpriv">By sending this you agree we may contact you about your enquiry. See our <a href="/privacy">Privacy Policy</a>.</p>
     </form>
+    </div>
   </div>
 </section>
 
@@ -129,7 +144,7 @@
         <div class="fnc"><div class="fnh">GET STARTED</div><a href="/audit">Signal Audit</a><a href="https://samoratrack.vercel.app" target="_blank" rel="noopener">Open SamoraTrack</a></div>
       </div>
     </div>
-    <div class="fbtm"><span>&copy; 2026 Samora Global</span><span>samoraglobal.com</span></div>
+    <div class="fbtm"><span>&copy; 2026 Samora Global</span><span><a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a> &middot; samoraglobal.com</span></div>
   </div>
 </footer>
 
