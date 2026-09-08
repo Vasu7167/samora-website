@@ -301,6 +301,46 @@ em{font-style:italic}
 .fg input,.fg select,.fg textarea{width:100%;padding:.8rem .9rem;background:var(--dc);border:1px solid var(--dr);border-radius:3px;color:var(--iv);font-family:var(--sans);font-size:.9rem;font-weight:300;transition:border-color .25s}
 .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--gold)}
 .fnote{font-size:.74rem;color:var(--ash);margin-top:.75rem;text-align:center}
+
+/* ── Contact form: built for completion, not decoration ───────────────────── */
+/* The form now lives in a card so it reads as the primary action on the page
+   rather than as a second column of body copy. */
+.fcard{background:var(--dark);border:1px solid var(--dr);border-radius:6px;padding:2rem 1.75rem;box-shadow:0 18px 44px rgba(28,25,23,.13)}
+.fcard-h{font-family:var(--serif);font-size:1.35rem;color:var(--iv);margin:0 0 .3rem}
+.fcard-s{font-size:.85rem;color:#B0A99B;margin:0 0 1.6rem}
+/* Two short fields side by side: fewer visual rows reads as a shorter form,
+   which is what actually drives completion. */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem}
+@media(max-width:560px){.fgrid{grid-template-columns:1fr}}
+/* Optional is stated on every field that is optional. Unmarked fields read as
+   compulsory, and an unexplained compulsory field is where people leave. */
+.fopt{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;color:var(--ash);text-transform:none;margin-left:.4rem}
+/* Left aligned helper, distinct from .fnote which is centred under the button */
+.fhelp{display:block;font-size:.72rem;color:var(--ash);margin-top:.35rem;line-height:1.45}
+.fg .ferr{display:block;font-size:.72rem;color:#E08C7D;margin-top:.35rem}
+.fg input.bad,.fg textarea.bad,.fg select.bad{border-color:#C4453A}
+/* Reassurance sits WITH the button, where the hesitation happens, not in a
+   paragraph above the fold that nobody re-reads before clicking. */
+.ftrust{display:flex;flex-wrap:wrap;gap:.35rem 1rem;margin-top:1rem}
+.ftrust span{display:flex;align-items:center;gap:.4rem;font-size:.74rem;color:#B0A99B}
+.ftrust svg{width:13px;height:13px;stroke:var(--gl);flex-shrink:0}
+.fpriv{font-size:.72rem;color:var(--ash);margin-top:1rem;text-align:center;line-height:1.5}
+.fpriv a{color:var(--gl)}
+/* Success replaces the form. A toast is missable, and a still-full form after
+   submitting reads as "did that work?" — the moment people send twice. */
+.fdone{text-align:center;padding:1.5rem .5rem}
+.fdone-ic{width:44px;height:44px;border-radius:50%;background:rgba(201,151,62,.16);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+.fdone-ic svg{width:22px;height:22px;stroke:var(--gl);stroke-width:2.2}
+.fdone h4{font-family:var(--serif);font-size:1.3rem;color:var(--iv);margin:0 0 .5rem}
+.fdone p{font-size:.88rem;color:#B0A99B;margin:0 auto;max-width:330px;line-height:1.6}
+/* Alternative routes. Some people will never fill a form; losing them for want
+   of a visible address is a self-inflicted wound. */
+.calt{display:flex;flex-direction:column;gap:.75rem;margin-top:1.75rem}
+.calt a{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;border:1px solid var(--line);border-radius:4px;color:var(--ink);transition:border-color .2s,transform .2s}
+.calt a:hover{border-color:var(--gold);transform:translateY(-1px)}
+.calt svg{width:17px;height:17px;stroke:var(--gold);flex-shrink:0}
+.calt strong{display:block;font-size:.86rem;font-weight:500}
+.calt span{display:block;font-size:.76rem;color:var(--ash)}
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(120px);background:var(--dark);color:var(--iv);padding:.9rem 1.5rem;border-radius:4px;border-left:3px solid var(--green);font-size:.85rem;z-index:300;transition:transform .4s var(--ease);box-shadow:0 16px 40px rgba(0,0,0,.3)}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
