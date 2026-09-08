@@ -509,6 +509,27 @@ em{font-style:italic}
    behaviour of dropping every other one. A named tool the buyer already pays
    for is the argument; a missing one is just a gap. */
 .os-viz--tight .os-src{font-size:.53rem;padding:.18rem .48rem;gap:.26rem;letter-spacing:.03em}
+/* ── Type compensation inside the scaled stage ─────────────────────────────
+   The mobile orbit is a 520px stage scaled to fit, roughly 0.75 on a phone.
+   That scale applies to the text as well as the geometry, so every label would
+   render three quarters of its intended size. These sizes are the design sizes
+   multiplied by about 1.33, so that AFTER the scale they land where they
+   should. Nothing here changes the desktop, which is unscaled. */
+.os-viz--scaled .os-sp-t{font-size:1.26rem;white-space:normal;line-height:1.15}
+.os-viz--scaled .os-sp-ic{font-size:1.3rem}
+.os-viz--scaled .os-spoke-in{width:196px;padding:.85rem 1rem;border-radius:11px}
+.os-viz--scaled .os-spoke-in::after{width:7px;height:7px;right:.9rem;top:1rem}
+.os-viz--scaled .os-src{font-size:.8rem;padding:.3rem .8rem;gap:.42rem}
+.os-viz--scaled .os-src i{width:5px;height:5px}
+.os-viz--scaled .os-core{width:200px;height:200px}
+.os-viz--scaled .os-core-s{font-size:4.35rem}
+.os-viz--scaled .os-core-l{font-size:.72rem}
+.os-viz--scaled .os-hint{font-size:.75rem;bottom:0}
+.os-viz--scaled .os-flow{width:6px;height:6px}
+.os-viz--scaled .os-flow--src{width:5px;height:5px}
+/* The tight-chip rule is for cramped DESKTOP columns; the scaled stage sizes
+   its own chips, so it must not be overridden by it. */
+.os-viz--scaled.os-viz--tight .os-src{font-size:.8rem;padding:.3rem .8rem}
 .os-viz--tight .os-src i{width:3px;height:3px}
 .os-viz:hover .os-src{color:#948E82;border-color:rgba(160,117,42,.35)}
 
