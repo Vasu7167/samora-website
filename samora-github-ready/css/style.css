@@ -54,7 +54,32 @@ em{font-style:italic}
 /* ── REVEAL ── */
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
 .reveal.visible{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}*{animation:none!important}}
+/* ── Reduced motion ────────────────────────────────────────────────────────
+   This was `*{animation:none!important}`, which DELETES every animation rather
+   than ending it. Two problems with that. Any element whose visible state is
+   produced by its animation can be left in the wrong state, and a marquee that
+   simply freezes hides whatever had not scrolled into view yet.
+
+   The safer pattern: run everything to completion in ~0ms. The end state is
+   always the intended one, and nothing moves.
+
+   NOTE: this whole block is why the site can look static on a phone. iOS puts
+   Reduce Motion under Settings > Accessibility > Motion, it is device-wide, and
+   Safari passes it straight through. If animations are missing on one device
+   but present on another, check that toggle before suspecting the CSS. */
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important
+  }
+  /* A frozen marquee hides its own content, so make it readable instead:
+     wrap onto lines and let it size naturally. */
+  .strip-track{animation:none!important;flex-wrap:wrap;width:auto;white-space:normal;justify-content:center;gap:.75rem 1.75rem}
+  .strip{overflow:visible}
+}
 
 /* ══ NAV ══ */
 .nav{position:fixed;top:0;left:0;right:0;z-index:200;transition:background .4s,box-shadow .4s,backdrop-filter .4s}
@@ -303,15 +328,12 @@ em{font-style:italic}
 .fnote{font-size:.74rem;color:var(--ash);margin-top:.75rem;text-align:center}
 
 /* ── Contact form: built for completion, not decoration ───────────────────── */
-/* The form now lives in a card so it reads as the primary action on the page
-   rather than as a second column of body copy. */
-.fcard{background:var(--dark);border:1px solid var(--dr);border-radius:6px;padding:2rem 1.75rem;box-shadow:0 18px 44px rgba(28,25,23,.13)}
-.fcard-h{font-family:var(--serif);font-size:1.35rem;color:var(--iv);margin:0 0 .3rem}
-.fcard-s{font-size:.85rem;color:#B0A99B;margin:0 0 1.6rem}
-/* Two short fields side by side: fewer visual rows reads as a shorter form,
-   which is what actually drives completion. */
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem}
-@media(max-width:560px){.fgrid{grid-template-columns:1fr}}
+/* An earlier version put the form in a narrow card beside a column of body
+   copy. Inside .container--narrow that left each column about 400px, so the
+   inputs were cramped, the email placeholder truncated, and the page had large
+   empty margins either side. The form is now the full width of the column, on
+   its own dark section, the same shape as the audit page that already worked.
+   The supporting copy sits ABOVE it at full width rather than stealing half. */
 /* Optional is stated on every field that is optional. Unmarked fields read as
    compulsory, and an unexplained compulsory field is where people leave. */
 .fopt{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;color:var(--ash);text-transform:none;margin-left:.4rem}
@@ -321,7 +343,7 @@ em{font-style:italic}
 .fg input.bad,.fg textarea.bad,.fg select.bad{border-color:#C4453A}
 /* Reassurance sits WITH the button, where the hesitation happens, not in a
    paragraph above the fold that nobody re-reads before clicking. */
-.ftrust{display:flex;flex-wrap:wrap;gap:.35rem 1rem;margin-top:1rem}
+.ftrust{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.75rem;margin-top:1.25rem}
 .ftrust span{display:flex;align-items:center;gap:.4rem;font-size:.74rem;color:#B0A99B}
 .ftrust svg{width:13px;height:13px;stroke:var(--gl);flex-shrink:0}
 .fpriv{font-size:.72rem;color:var(--ash);margin-top:1rem;text-align:center;line-height:1.5}
@@ -333,9 +355,15 @@ em{font-style:italic}
 .fdone-ic svg{width:22px;height:22px;stroke:var(--gl);stroke-width:2.2}
 .fdone h4{font-family:var(--serif);font-size:1.3rem;color:var(--iv);margin:0 0 .5rem}
 .fdone p{font-size:.88rem;color:#B0A99B;margin:0 auto;max-width:330px;line-height:1.6}
+/* The three steps read across the page rather than stacking down one half of
+   it, which is what was creating the dead space on the right. */
+.csteps--row{flex-direction:row;gap:2rem}
+.csteps--row .cst{flex:1}
+@media(max-width:820px){.csteps--row{flex-direction:column;gap:.85rem}}
 /* Alternative routes. Some people will never fill a form; losing them for want
    of a visible address is a self-inflicted wound. */
-.calt{display:flex;flex-direction:column;gap:.75rem;margin-top:1.75rem}
+.calt{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.25rem}
+@media(max-width:820px){.calt{grid-template-columns:1fr}}
 .calt a{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;border:1px solid var(--line);border-radius:4px;color:var(--ink);transition:border-color .2s,transform .2s}
 .calt a:hover{border-color:var(--gold);transform:translateY(-1px)}
 .calt svg{width:17px;height:17px;stroke:var(--gold);flex-shrink:0}
