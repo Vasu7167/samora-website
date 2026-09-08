@@ -505,6 +505,11 @@ em{font-style:italic}
 /* ── SOURCE CHIPS (outer ring, ambient) ── */
 .os-src{position:absolute;transform:translate(-50%,-50%);z-index:4;font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:#7A746A;background:rgba(28,25,18,.75);border:1px solid rgba(58,52,40,.8);border-radius:100px;padding:.24rem .6rem;white-space:nowrap;display:flex;align-items:center;gap:.32rem;animation:nodeIn .5s var(--ease) backwards;transition:all .3s}
 .os-src i{width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:.65;display:block}
+/* Tight columns keep all fourteen sources and shrink them, rather than the old
+   behaviour of dropping every other one. A named tool the buyer already pays
+   for is the argument; a missing one is just a gap. */
+.os-viz--tight .os-src{font-size:.53rem;padding:.18rem .48rem;gap:.26rem;letter-spacing:.03em}
+.os-viz--tight .os-src i{width:3px;height:3px}
 .os-viz:hover .os-src{color:#948E82;border-color:rgba(160,117,42,.35)}
 
 /* ── FLOW PARTICLES ── */
