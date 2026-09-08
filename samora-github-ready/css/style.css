@@ -113,6 +113,12 @@ em{font-style:italic}
 .hero-bg{position:absolute;inset:0;pointer-events:none}
 .hero-glow{position:absolute;top:-30%;right:-10%;width:70vw;height:70vw;background:radial-gradient(circle,rgba(160,117,42,.16),transparent 62%);animation:drift 22s ease-in-out infinite}
 @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-6%,5%) scale(1.12)}}
+/* A single glow reads as one flat blob, which is most of the "incomplete"
+   feeling: nothing sits behind anything. A second, cooler, slower layer
+   drifting the other way gives the nebula depth, and 22s against 31s means the
+   pair never visibly repeats. */
+.hero-glow--2{top:auto;bottom:-35%;right:auto;left:-15%;width:60vw;height:60vw;background:radial-gradient(circle,rgba(232,201,122,.09),transparent 60%);animation:drift2 31s ease-in-out infinite}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1.05)}50%{transform:translate(7%,-4%) scale(.92)}}
 .hero-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,#000,transparent)}
 .hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:3.5rem;align-items:center;width:100%}
 @media(max-width:1000px){.hero-inner{grid-template-columns:1fr;gap:3rem}.hero{min-height:auto}}
@@ -125,6 +131,9 @@ em{font-style:italic}
 /* ── HERO OS DIAGRAM ── */
 .os-viz{position:relative;height:430px}
 @media(max-width:1000px){.os-viz{height:380px}}
+/* Soft halo behind the core. The dashed rings gave the diagram structure but
+   nothing gave the centre presence, so it read as drawn rather than lit. */
+.os-core::before{content:'';position:absolute;inset:-46px;border-radius:50%;background:radial-gradient(circle,rgba(160,117,42,.30),transparent 68%);pointer-events:none;z-index:-1;animation:corePulse 5.2s ease-in-out infinite}
 .os-core{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:132px;height:132px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#3A2E17,#18160F);border:1px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;box-shadow:0 0 60px rgba(160,117,42,.35)}
 .os-core-s{font-family:var(--serif);font-size:2.6rem;color:var(--gpl);line-height:1}
 .os-core-l{font-family:var(--mono);font-size:.52rem;letter-spacing:.18em;color:var(--gl);margin-top:.2rem}
@@ -406,9 +415,16 @@ em{font-style:italic}
 
 /* ── FEATURE SPOKES (inner ring, interactive) ── */
 .os-spoke{position:absolute;z-index:8;transform:translate(-50%,-50%);cursor:pointer;text-decoration:none;animation:nodeIn .55s var(--ease) backwards}
+/* Every spoke shared z-index 8, so a card later in the DOM covered the one
+   being hovered as it widened. Lift the active one above its siblings. */
+.os-spoke:hover,.os-spoke:focus-visible{z-index:30}
+.os-spoke:focus-visible{outline:none}
+/* Dim the others so the chosen one reads clearly against a busy diagram. */
+.os-viz:has(.os-spoke:hover) .os-spoke:not(:hover) .os-spoke-in{opacity:.45}
+.os-viz:has(.os-spoke:hover) .os-src{opacity:.35}
 .os-spoke-in{background:linear-gradient(160deg,#2A2418,#1D1A12);border:1px solid var(--dr);border-radius:8px;padding:.6rem .85rem;width:158px;transition:all .38s var(--ease);box-shadow:0 10px 30px rgba(0,0,0,.45);position:relative;overflow:hidden}
 .os-spoke-in::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gpl));transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
-.os-spoke:hover .os-spoke-in{border-color:var(--gold);width:236px;background:linear-gradient(160deg,#33291500,#241F15);box-shadow:0 18px 50px rgba(160,117,42,.3);transform:translateY(-2px)}
+.os-spoke:hover .os-spoke-in,.os-spoke:focus-visible .os-spoke-in{border-color:var(--gpl);width:236px;background:linear-gradient(160deg,#3A3018,#211C13);box-shadow:0 20px 54px rgba(0,0,0,.6),0 0 0 1px rgba(232,201,122,.25),0 0 42px rgba(160,117,42,.32);transform:translateY(-3px)}
 .os-spoke:hover .os-spoke-in::before{transform:scaleX(1)}
 .os-sp-top{display:flex;align-items:center;gap:.5rem}
 .os-sp-ic{font-size:.95rem;line-height:1;flex-shrink:0}
@@ -425,6 +441,12 @@ em{font-style:italic}
 .os-viz:hover .os-src{color:#948E82;border-color:rgba(160,117,42,.35)}
 
 /* ── FLOW PARTICLES ── */
+@media(hover:none){
+  .os-spoke-in{width:210px}
+  .os-sp-d{max-height:90px;opacity:1;margin-top:.4rem}
+  .os-sp-go{max-height:20px;opacity:1;margin-top:.45rem}
+  .os-spoke-in::before{transform:scaleX(1)}
+}
 .os-flow{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--gpl);box-shadow:0 0 8px var(--gl);z-index:6;pointer-events:none;opacity:0}
 
 .os-hint{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:.56rem;letter-spacing:.16em;color:#6B6559;white-space:nowrap;animation:fadeHint 1s 2s backwards}
