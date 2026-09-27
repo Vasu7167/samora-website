@@ -1,0 +1,362 @@
+/* ============================================================================
+   SAMORA DESIGN TOKENS
+   Generated from palette.py. Do not hand edit. Do not add a colour here that
+   was not generated. If a value is missing, the answer is to use an existing
+   token, not to invent a new one.
+
+   The one fact this system rests on: the brand gold #B8860B and the brand
+   beige #F0E8DA sit on the same Oklch hue, 81.6 and 81.8 degrees. So every
+   neutral in the product is that same hue at a different lightness, which is
+   why the interface looks related to the logo without ever repeating it.
+   ========================================================================= */
+
+:root {
+  /* --- type. One family. Three weights. Nothing else. ------------------- */
+  --font: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --w-regular: 400;
+  --w-medium: 500;
+  --w-semibold: 600;
+
+  --t-3xs: 11px;
+  --t-2xs: 12px;
+  --t-xs: 13px;
+  --t-sm: 14px;
+  --t-md: 16px;
+  --t-lg: 20px;
+  --t-xl: 26px;
+  --t-2xl: 34px;
+  --t-3xl: 44px;
+
+  --lh-tight: 1.15;      /* display and headings */
+  --lh-snug: 1.35;       /* subheads, table cells */
+  --lh-body: 1.55;       /* running text */
+  --track-caps: 0.10em;  /* uppercase micro labels only, never above 12px */
+  --track-tag: 0.06em;   /* status tags, which are shorter and tighter */
+  --track-display: -0.01em;
+  --measure: 68ch;       /* running text never exceeds this */
+
+  /* --- space. One 4px grid. Eight steps. -------------------------------- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+
+  /* --- radius. Two values, plus round for avatars and dots. ------------- */
+  --r-sm: 2px;           /* chips, inputs, buttons, tags */
+  --r-md: 3px;           /* cards, panels, menus, dialogs */
+  --r-round: 999px;      /* avatars and the 6px status dot. Nothing else. */
+
+  /* --- line. One width, plus the focus ring, which must be thicker to pass
+         WCAG 2.2 non-text contrast at a glance. ----------------------------- */
+  --line-w: 1px;
+  --focus-w: 2px;
+
+  /* --- density. Fixed heights stop the interface breathing unevenly. ----- */
+  --h-control: 32px;     /* buttons, inputs, selects */
+  --h-control-sm: 26px;
+  --h-row: 36px;         /* table rows */
+
+  /* --- motion. Two durations. One curve. -------------------------------- */
+  --dur-fast: 120ms;     /* hover, focus, colour */
+  --dur-slow: 200ms;     /* enter, exit, size */
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+
+  /* --- brand constants. Print and the mark only. ------------------------ */
+  --brand-gold-deep: #B8860B;
+  --brand-gold-bright: #E8B84B;
+  --brand-gold-warm: #C8961E;
+  --brand-beige: #F0E8DA;
+  --brand-ink: #2B1B14;
+  --c-print-paper: #FFFFFF;   /* the one white in the system, and only on paper */
+  /* The gold gradient belongs to the logo, the letterhead and print.
+     It must never appear as a UI fill. */
+  --brand-gradient: linear-gradient(135deg, #B8860B 0%, #E8B84B 45%, #C8961E 100%);
+
+  /* --- sand ramp. The raw scale. Prefer the roles below. ----------------- */
+  --sand-00: #FDFAF4;
+  --sand-05: #F6F0E7;
+  --sand-10: #F0E8DA;
+  --sand-20: #E0D6C5;
+  --sand-30: #C8BCA9;
+  --sand-40: #A99D88;
+  --sand-50: #8A7F6B;
+  --sand-60: #6D624F;
+  --sand-70: #504635;
+  --sand-80: #382F1F;
+  --sand-90: #261E10;
+  --sand-95: #171005;
+}
+
+/* --- roles, light ------------------------------------------------------- */
+:root, [data-theme="light"] {
+  --c-canvas: #F6F0E7;
+  --c-surface: #FDFAF4;
+  --c-surface-2: #F0E8DA;
+  --c-surface-3: #E0D6C5;
+  --c-line: #C8BCA9;
+  --c-line-strong: #A99D88;
+  --c-text: #171005;
+  --c-text-2: #504635;
+  --c-text-3: #6D624F;
+  --c-accent: #B8860B;
+  --c-accent-text: #886100;
+  --c-accent-solid: #926B14;
+  --c-on-accent: #FDFAF4;
+  --c-focus: #AB8230;
+  --c-verified: #656D3C;
+  --c-verified-wash: rgba(101,109,60,0.1);
+  --c-partial: #886209;
+  --c-partial-wash: rgba(136,98,9,0.1);
+  --c-risk: #A94D2B;
+  --c-risk-wash: rgba(169,77,43,0.1);
+  --c-info: #456E81;
+  --c-info-wash: rgba(69,110,129,0.1);
+  --shadow-1: 0 1px 2px rgba(23,16,5,0.06), 0 1px 1px rgba(23,16,5,0.04);
+  --shadow-2: 0 6px 20px rgba(23,16,5,0.1), 0 2px 6px rgba(23,16,5,0.06);
+}
+
+/* --- roles, dark -------------------------------------------------------- */
+[data-theme="dark"] {
+  --c-canvas: #171005;
+  --c-surface: #261E10;
+  --c-surface-2: #382F1F;
+  --c-surface-3: #504635;
+  --c-line: #504635;
+  --c-line-strong: #6D624F;
+  --c-text: #F6F0E7;
+  --c-text-2: #C8BCA9;
+  --c-text-3: #A99D88;
+  --c-accent: #E8B84B;
+  --c-accent-text: #DEB771;
+  --c-accent-solid: #E8B84B;
+  --c-on-accent: #171005;
+  --c-focus: #DEB771;
+  --c-verified: #8E9864;
+  --c-verified-wash: rgba(142,152,100,0.1);
+  --c-partial: #B58D41;
+  --c-partial-wash: rgba(181,141,65,0.1);
+  --c-risk: #D97956;
+  --c-risk-wash: rgba(217,121,86,0.1);
+  --c-info: #6D99AC;
+  --c-info-wash: rgba(109,153,172,0.1);
+  --shadow-1: 0 1px 2px rgba(246,240,231,0.06), 0 1px 1px rgba(246,240,231,0.04);
+  --shadow-2: 0 6px 20px rgba(246,240,231,0.1), 0 2px 6px rgba(246,240,231,0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+  --c-canvas: #171005;
+  --c-surface: #261E10;
+  --c-surface-2: #382F1F;
+  --c-surface-3: #504635;
+  --c-line: #504635;
+  --c-line-strong: #6D624F;
+  --c-text: #F6F0E7;
+  --c-text-2: #C8BCA9;
+  --c-text-3: #A99D88;
+  --c-accent: #E8B84B;
+  --c-accent-text: #DEB771;
+  --c-accent-solid: #E8B84B;
+  --c-on-accent: #171005;
+  --c-focus: #DEB771;
+  --c-verified: #8E9864;
+  --c-verified-wash: rgba(142,152,100,0.1);
+  --c-partial: #B58D41;
+  --c-partial-wash: rgba(181,141,65,0.1);
+  --c-risk: #D97956;
+  --c-risk-wash: rgba(217,121,86,0.1);
+  --c-info: #6D99AC;
+  --c-info-wash: rgba(109,153,172,0.1);
+  --shadow-1: 0 1px 2px rgba(246,240,231,0.06), 0 1px 1px rgba(246,240,231,0.04);
+  --shadow-2: 0 6px 20px rgba(246,240,231,0.1), 0 2px 6px rgba(246,240,231,0.06);
+  }
+}
+
+/* ============================================================================
+   BASE
+   ========================================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--c-canvas);
+  color: var(--c-text);
+  font-family: var(--font);
+  font-size: var(--t-sm);
+  font-weight: var(--w-regular);
+  line-height: var(--lh-body);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { margin: 0; line-height: var(--lh-tight); font-weight: var(--w-semibold); }
+h1 { font-size: var(--t-2xl); letter-spacing: var(--track-display); }
+h2 { font-size: var(--t-xl); letter-spacing: var(--track-display); }
+h3 { font-size: var(--t-lg); }
+h4 { font-size: var(--t-md); font-weight: var(--w-medium); }
+p { margin: 0 0 var(--s-3); max-width: var(--measure); }
+
+/* The only place uppercase and letterspacing are allowed. */
+.label {
+  font-size: var(--t-3xs);
+  font-weight: var(--w-semibold);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+
+.muted { color: var(--c-text-2); }
+.num { font-variant-numeric: tabular-nums; text-align: right; }
+
+/* ============================================================================
+   COMPONENTS
+   Every one of these is a hairline and a rectangle. No pills, no soft
+   shadows, no gradients. The restraint is the brand.
+   ========================================================================= */
+
+/* --- surface ----------------------------------------------------------- */
+.card {
+  background: var(--c-surface);
+  border: var(--line-w) solid var(--c-line);
+  border-radius: var(--r-md);
+  padding: var(--s-5);
+}
+.card--raised { box-shadow: var(--shadow-1); }
+
+/* A rule, not a shadow, is how Samora separates things. */
+.rule { height: var(--line-w); background: var(--c-line); border: 0; margin: var(--s-5) 0; }
+
+/* --- button ------------------------------------------------------------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  height: var(--h-control);
+  padding: 0 var(--s-4);
+  border: var(--line-w) solid var(--c-line-strong);
+  border-radius: var(--r-sm);
+  background: var(--c-surface);
+  color: var(--c-text);
+  font-family: var(--font);
+  font-size: var(--t-xs);
+  font-weight: var(--w-medium);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease);
+}
+.btn:hover { background: var(--c-surface-2); border-color: var(--c-accent); }
+.btn:focus-visible { outline: var(--focus-w) solid var(--c-focus); outline-offset: 1px; }
+.btn--primary {
+  /* --c-accent is the display gold and cannot carry text: it measures 3.1:1
+     against the on-accent colour. --c-accent-solid is solved for 4.5:1. */
+  background: var(--c-accent-solid);
+  border-color: var(--c-accent-solid);
+  color: var(--c-on-accent);
+}
+.btn--primary:hover { filter: brightness(0.92); }
+.btn--sm { height: var(--h-control-sm); padding: 0 var(--s-3); font-size: var(--t-2xs); }
+.btn--quiet { background: transparent; border-color: transparent; color: var(--c-text-2); }
+.btn--quiet:hover { background: var(--c-surface-2); border-color: transparent; color: var(--c-text); }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+
+/* --- input ------------------------------------------------------------- */
+.input {
+  height: var(--h-control);
+  width: 100%;
+  padding: 0 var(--s-3);
+  background: var(--c-surface);
+  border: var(--line-w) solid var(--c-line-strong);
+  border-radius: var(--r-sm);
+  color: var(--c-text);
+  font-family: var(--font);
+  font-size: var(--t-sm);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.input::placeholder { color: var(--c-text-3); }
+.input:focus { outline: none; border-color: var(--c-focus);
+  box-shadow: 0 0 0 var(--focus-w) var(--c-focus); }
+
+/* --- status. A rectangle with a hairline, never a pill. ---------------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  height: 18px;
+  padding: 0 6px;
+  border: var(--line-w) solid currentColor;
+  border-radius: var(--r-sm);
+  font-size: var(--t-3xs);
+  font-weight: var(--w-semibold);
+  letter-spacing: var(--track-tag);
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+.tag--verified { color: var(--c-verified); background: var(--c-verified-wash); }
+.tag--partial  { color: var(--c-partial);  background: var(--c-partial-wash); }
+.tag--risk     { color: var(--c-risk);     background: var(--c-risk-wash); }
+.tag--info     { color: var(--c-info);     background: var(--c-info-wash); }
+.tag--neutral  { color: var(--c-text-3);   background: transparent; }
+
+/* The only round things in the system. */
+.dot { width: 6px; height: 6px; border-radius: var(--r-round); background: currentColor; flex: none; }
+.avatar { width: 28px; height: 28px; border-radius: var(--r-round); object-fit: cover; }
+
+/* --- table ------------------------------------------------------------- */
+.table { width: 100%; border-collapse: collapse; font-size: var(--t-2xs); }
+.table th {
+  height: 28px;
+  padding: 0 var(--s-3) 0 0;
+  text-align: left;
+  font-size: var(--t-3xs);
+  font-weight: var(--w-semibold);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+  border-bottom: var(--line-w) solid var(--c-line-strong);
+  white-space: nowrap;
+}
+.table td {
+  height: var(--h-row);
+  line-height: var(--lh-snug);
+  padding: 0 var(--s-3) 0 0;
+  border-bottom: var(--line-w) solid var(--c-line);
+  vertical-align: middle;
+}
+.table tbody tr:hover { background: var(--c-surface-2); }
+.table th.num, .table td.num { text-align: right; padding-right: 0; }
+
+/* --- things that genuinely float. The only users of --dur-slow. --------- */
+.pop {
+  background: var(--c-surface);
+  border: var(--line-w) solid var(--c-line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
+  padding: var(--s-2);
+  transition: opacity var(--dur-slow) var(--ease),
+              transform var(--dur-slow) var(--ease);
+}
+.pop[hidden] { opacity: 0; transform: translateY(-4px); }
+.pop--dialog { box-shadow: var(--shadow-2); padding: var(--s-5); }
+
+/* --- meter. Flat, hairline, no gloss. ---------------------------------- */
+.meter { height: 4px; background: var(--c-surface-3); border-radius: var(--r-sm); overflow: hidden; }
+.meter > i { display: block; height: 100%; background: var(--c-accent); }
+
+/* --- print. Ink on paper, and the one place white is correct. ---------- */
+@media print {
+  html, body { background: var(--c-print-paper); }
+  .card, .table tbody tr:hover { background: transparent; }
+  .card, .pop { box-shadow: none; }
+}
+
+/* --- reduced motion ----------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 1ms !important; animation-duration: 1ms !important; }
+}
