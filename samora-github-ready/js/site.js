@@ -76,7 +76,7 @@
         var dx0 = x - hp[0], dy0 = y - hp[1]; b += hi * Math.exp(-(dx0 * dx0 + dy0 * dy0) / sig);
         for (var j = 0; j < lights.length; j++) { var L = lights[j]; if (L.i <= 0) continue; var dx = x - L.p[0], dy = y - L.p[1]; b += L.i * Math.exp(-(dx * dx + dy * dy) / sig); }
         b = Math.min(1, b);
-        ctx.fillStyle = 'rgba(' + Math.round(78 + 164 * b) + ',' + Math.round(78 + 118 * b) + ',' + Math.round(88 + 12 * b) + ',' + (0.5 + 0.48 * b) + ')';
+        ctx.fillStyle = 'rgba(' + Math.round(130 + 112 * b) + ',' + Math.round(84 + 112 * b) + ',' + Math.round(48 + 52 * b) + ',' + (0.36 + 0.6 * b) + ')';
         ctx.beginPath(); ctx.arc(x, y, dotR * (1 + 0.45 * b), 0, 7); ctx.fill();
       }
       // arcs
@@ -211,10 +211,10 @@
     function spawn() {
       var keep = Math.random() < 0.18, exit = keep ? 5 : 1 + Math.floor(Math.random() * 4);
       var d = document.createElement('div'); d.className = 'fnl-dot' + (keep ? '' : ' fnl-dot--out'); stage.appendChild(d);
-      var x0 = CX + (Math.random() * 2 - 1) * (HW_TOP - 16), yEnd = keep ? NECK + 24 : TOP + exit * BAND, dur = 2400 + Math.random() * 1400, t0 = performance.now();
+      var x0 = CX + (Math.random() * 2 - 1) * (HW_TOP - 16), yEnd = keep ? NECK + 20 : TOP + exit * BAND, dur = 2400 + Math.random() * 1400, t0 = performance.now();
       (function step(now) {
         if (!d.isConnected) return;
-        var t = Math.min((now - t0) / dur, 1), y = -10 + (yEnd + 10) * t;
+        var t = Math.min((now - t0) / dur, 1), y = TOP + (yEnd - TOP) * t;
         var x = CX + (x0 - CX) * (hw(Math.max(TOP, Math.min(y, NECK))) / HW_TOP);
         d.style.left = (x / VW * 100) + '%'; d.style.top = (y / VH * 100) + '%';
         d.style.opacity = String(t > .9 ? (1 - t) * 10 * (keep ? 1 : .6) : (keep ? 1 : .5));
