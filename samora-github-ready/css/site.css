@@ -814,3 +814,6 @@ h1 .gold,.hero h1 .gold{color:var(--gold-bright)}
 .prodsec .hp-wrap{margin-top:48px}
 .prodsec .hp-win{animation:none;transform:rotateX(8deg)}
 .prodsec .hp-float{animation:none;opacity:1}
+.lic-body{min-height:0}
+.lic-body>[data-at]{opacity:.22;transform:none;filter:saturate(.4)}
+.lic-body>[data-at].in{opacity:1;filter:none}

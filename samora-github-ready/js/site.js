@@ -370,13 +370,14 @@
       steps.forEach(function (s, i) { s.classList.toggle('on', i === k); s.classList.toggle('done', i < k); });
       parts.forEach(function (p) { p.classList.toggle('in', +p.getAttribute('data-at') <= k); });
     }
+    go(0);
     if (reduce) { go(n - 1); return; }
     var manual = false;
     steps.forEach(function (s, i) { s.style.cursor = 'pointer'; s.addEventListener('click', function () { manual = true; clearTimeout(timer); go(i); }); });
     function tick() {
       if (manual) return;
       if (cur < n - 1) { go(cur + 1); timer = setTimeout(tick, 2600); }
-      else { timer = setTimeout(function () { go(-1); timer = setTimeout(tick, 700); }, 6000); }
+      else { timer = setTimeout(function () { go(0); timer = setTimeout(tick, 2600); }, 7000); }
     }
     function run() { go(0); timer = setTimeout(tick, 2600); }
     var seen = false;
