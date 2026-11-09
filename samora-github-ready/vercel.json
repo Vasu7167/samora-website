@@ -5,22 +5,73 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
       ]
     },
     {
       "source": "/css/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     },
     {
       "source": "/js/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     },
     {
       "source": "/api/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/daily-command",
+      "destination": "/today",
+      "permanent": true
+    },
+    {
+      "source": "/pipeline",
+      "destination": "/deals",
+      "permanent": true
+    },
+    {
+      "source": "/intelligence",
+      "destination": "/discovery",
+      "permanent": true
+    },
+    {
+      "source": "/samagic",
+      "destination": "/leaders",
+      "permanent": true
+    },
+    {
+      "source": "/audit",
+      "destination": "/demo",
+      "permanent": true
     }
   ]
 }
