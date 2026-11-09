@@ -37,7 +37,10 @@
 
   /* ---- hero map: markets light up one by one ---- */
   var cv = document.getElementById('worldmap');
-  if (cv && window.SAMORA_MAP) drawMap(cv, window.SAMORA_MAP, reduce);
+  if (cv && window.SAMORA_MAP) {
+    if (reduce || !('IntersectionObserver' in window)) drawMap(cv, window.SAMORA_MAP, reduce);
+    else { var mo = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { mo.disconnect(); drawMap(cv, window.SAMORA_MAP, reduce); } }, { threshold: .25 }); mo.observe(cv); }
+  }
 
   function drawMap(cv, M, still) {
     var ctx = cv.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -378,5 +381,14 @@
     function run() { go(0); timer = setTimeout(tick, 2600); }
     var seen = false;
     new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && !seen) { seen = true; run(); } }); }, { threshold: .35 }).observe(f);
+  });
+})();
+
+/* ---- v10: bento language cycle ---- */
+(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('[data-cycle]').forEach(function (b) {
+    var s = b.querySelectorAll('span'), i = 0;
+    setInterval(function () { s[i].classList.remove('on'); i = (i + 1) % s.length; s[i].classList.add('on'); }, 2200);
   });
 })();
