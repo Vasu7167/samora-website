@@ -76,7 +76,7 @@
         var dx0 = x - hp[0], dy0 = y - hp[1]; b += hi * Math.exp(-(dx0 * dx0 + dy0 * dy0) / sig);
         for (var j = 0; j < lights.length; j++) { var L = lights[j]; if (L.i <= 0) continue; var dx = x - L.p[0], dy = y - L.p[1]; b += L.i * Math.exp(-(dx * dx + dy * dy) / sig); }
         b = Math.min(1, b);
-        ctx.fillStyle = 'rgba(' + Math.round(130 + 112 * b) + ',' + Math.round(84 + 112 * b) + ',' + Math.round(48 + 52 * b) + ',' + (0.34 + 0.6 * b) + ')';
+        ctx.fillStyle = 'rgba(' + Math.round(78 + 164 * b) + ',' + Math.round(78 + 118 * b) + ',' + Math.round(88 + 12 * b) + ',' + (0.5 + 0.48 * b) + ')';
         ctx.beginPath(); ctx.arc(x, y, dotR * (1 + 0.45 * b), 0, 7); ctx.fill();
       }
       // arcs
@@ -170,5 +170,96 @@
         .catch(function () { b.disabled = false; b.textContent = 'Try again'; err('Could not reach the server. Please email vasu@samoraglobal.com.'); });
       void label;
     });
+  });
+})();
+
+
+/* ---- v2: funnel, orbit particles, gap bars ---- */
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(t, a) { var n = document.createElementNS(NS, t); for (var k in a) n.setAttribute(k, a[k]); return n; }
+
+  /* gap bars fill when seen */
+  document.querySelectorAll('.leak').forEach(function (L) {
+    if (reduce || !('IntersectionObserver' in window)) { L.classList.add('in'); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { L.classList.add('in'); io.disconnect(); } }); }, { threshold: .3 });
+    io.observe(L);
+  });
+
+  /* funnel: contacts fall through five bands; rejected ones fade where they are filtered.
+     The band numbers are an illustrative SAMpaign, labelled as such on the page. */
+  document.querySelectorAll('.fnl').forEach(function (box) {
+    var stage = box.querySelector('.fnl-stage'), svg = box.querySelector('svg'), money = box.querySelector('[data-money]');
+    var VW = 340, VH = 330, CX = 170, TOP = 6, NECK = 300, HW_TOP = 160, HW_NECK = 52;
+    var hw = function (y) { return HW_TOP + (HW_NECK - HW_TOP) * ((y - TOP) / (NECK - TOP)); };
+    var ST = [['Finds the right people', 2000], ['Keeps the ones worth it', 640], ['Writes to each, in their language', 100], ['Gets replies', 6], ['Books meetings', 5]];
+    var BAND = (NECK - TOP) / ST.length;
+    ST.forEach(function (st, i) {
+      var y0 = TOP + i * BAND, y1 = y0 + BAND, a = hw(y0), b = hw(y1), my = y0 + BAND / 2;
+      svg.appendChild(el('path', { d: 'M' + (CX - a) + ' ' + y0 + ' L' + (CX + a) + ' ' + y0 + ' L' + (CX + b) + ' ' + y1 + ' L' + (CX - b) + ' ' + y1 + ' Z',
+        fill: 'rgba(232,184,75,' + (0.04 + i * 0.045) + ')', stroke: 'rgba(232,184,75,' + (0.22 + i * 0.1) + ')', 'stroke-width': 1 }));
+      var k = el('text', { x: CX, y: my - 6, fill: '#C9C9CF', 'text-anchor': 'middle', 'font-family': 'Archivo, sans-serif', 'font-size': 10.5, 'font-weight': 500 });
+      k.textContent = st[0]; svg.appendChild(k);
+      var n = el('text', { x: CX, y: my + 14, fill: '#FFFFFF', 'text-anchor': 'middle', 'font-family': 'Archivo, sans-serif', 'font-size': 19, 'font-weight': 600, 'data-n': st[1], 'class': 'fnl-num' });
+      n.textContent = '0'; svg.appendChild(n);
+    });
+    var nums = Array.prototype.slice.call(svg.querySelectorAll('.fnl-num'));
+    var fmt = function (v) { return v.toLocaleString('en-US'); };
+    if (reduce) { nums.forEach(function (n) { n.textContent = fmt(+n.getAttribute('data-n')); }); money.textContent = '$1.0M'; return; }
+    var running = false, startAt = 0, last = 0, acc = 0, CYCLE = 14000, TARGET = 1000000;
+    function spawn() {
+      var keep = Math.random() < 0.18, exit = keep ? 5 : 1 + Math.floor(Math.random() * 4);
+      var d = document.createElement('div'); d.className = 'fnl-dot' + (keep ? '' : ' fnl-dot--out'); stage.appendChild(d);
+      var x0 = CX + (Math.random() * 2 - 1) * (HW_TOP - 16), yEnd = keep ? NECK + 24 : TOP + exit * BAND, dur = 2400 + Math.random() * 1400, t0 = performance.now();
+      (function step(now) {
+        if (!d.isConnected) return;
+        var t = Math.min((now - t0) / dur, 1), y = -10 + (yEnd + 10) * t;
+        var x = CX + (x0 - CX) * (hw(Math.max(TOP, Math.min(y, NECK))) / HW_TOP);
+        d.style.left = (x / VW * 100) + '%'; d.style.top = (y / VH * 100) + '%';
+        d.style.opacity = String(t > .9 ? (1 - t) * 10 * (keep ? 1 : .6) : (keep ? 1 : .5));
+        if (t >= 1) { d.remove(); return; }
+        requestAnimationFrame(step);
+      })(t0);
+    }
+    function tick(now) {
+      var dt = Math.min((now - last) / 1000, .1); last = now;
+      var p = Math.min((now - startAt) / CYCLE, 1), e = 1 - Math.pow(1 - p, 2);
+      nums.forEach(function (n) { n.textContent = fmt(Math.round(+n.getAttribute('data-n') * e)); });
+      money.textContent = p >= 1 ? '$1.0M' : '$' + (Math.round(TARGET * e / 1000) / 1000).toFixed(2) + 'M';
+      if (p < 1) { acc += dt * 24; while (acc >= 1) { spawn(); acc -= 1; } }
+      else if (now - startAt > CYCLE + 4000) { startAt = now; }
+      if (running) requestAnimationFrame(tick);
+    }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting && !running) { running = true; startAt = last = performance.now(); requestAnimationFrame(tick); }
+        else if (!e.isIntersecting) { running = false; }
+      });
+    }, { threshold: .2 });
+    io.observe(box);
+  });
+
+  /* orbit: signals travel from each integration into SamoraOS */
+  document.querySelectorAll('.orbit svg').forEach(function (svg) {
+    if (reduce) return;
+    var lines = Array.prototype.slice.call(svg.querySelectorAll('line.feed'));
+    var layer = svg.querySelector('#pulses'), live = false;
+    function pulse() {
+      if (!live || !lines.length) return;
+      var L = lines[Math.floor(Math.random() * lines.length)];
+      var x1 = +L.getAttribute('x1'), y1 = +L.getAttribute('y1'), x2 = +L.getAttribute('x2'), y2 = +L.getAttribute('y2');
+      var c = el('circle', { r: 3.2, fill: '#E8B84B' }); layer.appendChild(c);
+      var t0 = performance.now(), dur = 1300 + Math.random() * 700;
+      (function step(now) {
+        var t = Math.min((now - t0) / dur, 1), e = t * t * (3 - 2 * t);
+        c.setAttribute('cx', x1 + (x2 - x1) * e); c.setAttribute('cy', y1 + (y2 - y1) * e);
+        c.setAttribute('opacity', t < .1 ? t * 10 : (t > .85 ? (1 - t) / .15 : 1));
+        if (t < 1) requestAnimationFrame(step); else c.remove();
+      })(t0);
+      setTimeout(pulse, 160 + Math.random() * 220);
+    }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { var was = live; live = e.isIntersecting; if (live && !was) pulse(); }); }, { threshold: .15 });
+    io.observe(svg);
   });
 })();
