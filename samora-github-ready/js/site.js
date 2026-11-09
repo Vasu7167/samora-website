@@ -102,7 +102,7 @@
         var x = L.p[0], y = L.p[1];
         glow(x, y, W / 55, 0.55 * L.i);
         ctx.fillStyle = 'rgba(255,240,205,' + L.i + ')'; ctx.beginPath(); ctx.arc(x, y, Math.max(2, W / 450), 0, 7); ctx.fill();
-        if (L.c.hub || small && ['London', 'New York', 'Lagos', 'Bangkok', 'São Paulo', 'Riyadh', 'Dar es Salaam', 'Sydney', 'Tokyo'].indexOf(L.c.n) < 0) return;
+        if (L.c.hub || small && ['London', 'New York', 'Lagos', 'Bangkok', 'São Paulo', 'Riyadh', 'Dar es Salaam', 'Sydney'].indexOf(L.c.n) < 0) return;
         ctx.fillStyle = 'rgba(243,227,195,' + 0.92 * L.i + ')';
         var txt = L.c.n.toUpperCase(), off = Math.max(8, W / 110);
         if (L.c.s === 'l') { ctx.textAlign = 'right'; ctx.fillText(txt, x - off, y); }
@@ -354,5 +354,29 @@
   document.querySelectorAll('[data-feed]').forEach(function (f) {
     var ul = f.querySelector('ul'); if (reduce) return;
     setInterval(function () { var last = ul.lastElementChild; ul.removeChild(last); last.classList.remove('new'); void last.offsetWidth; last.classList.add('new'); ul.insertBefore(last, ul.firstElementChild); }, 2600);
+  });
+})();
+
+/* ---- v8: the LinkedIn conversation plays out step by step ---- */
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-lif]').forEach(function (f) {
+    var steps = f.querySelectorAll('.lis li'), parts = f.querySelectorAll('.lic-body>[data-at]'), n = steps.length, cur = -1, timer = null;
+    function go(k) {
+      cur = k;
+      steps.forEach(function (s, i) { s.classList.toggle('on', i === k); s.classList.toggle('done', i < k); });
+      parts.forEach(function (p) { p.classList.toggle('in', +p.getAttribute('data-at') <= k); });
+    }
+    if (reduce) { go(n - 1); return; }
+    var manual = false;
+    steps.forEach(function (s, i) { s.style.cursor = 'pointer'; s.addEventListener('click', function () { manual = true; clearTimeout(timer); go(i); }); });
+    function tick() {
+      if (manual) return;
+      if (cur < n - 1) { go(cur + 1); timer = setTimeout(tick, 2600); }
+      else { timer = setTimeout(function () { go(-1); timer = setTimeout(tick, 700); }, 6000); }
+    }
+    function run() { go(0); timer = setTimeout(tick, 2600); }
+    var seen = false;
+    new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && !seen) { seen = true; run(); } }); }, { threshold: .35 }).observe(f);
   });
 })();
