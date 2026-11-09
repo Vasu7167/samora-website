@@ -45,7 +45,7 @@
     var hub = M.cities.filter(function (c) { return c.hub; })[0];
     var order = M.cities.filter(function (c) { return !c.hub; });
     var GAP = 0.5, TRAVEL = 1.0, START = 0.9, END = START + order.length * GAP + TRAVEL + 1;
-    var counter = document.querySelector('[data-lit]'), lastCount = -1;
+    var counter = document.querySelector('[data-opening]'), lastName = '';
     function size() {
       var w = cv.parentElement.clientWidth;
       W = w; H = Math.round(w / M.aspect);
@@ -102,7 +102,7 @@
         var x = L.p[0], y = L.p[1];
         glow(x, y, W / 55, 0.55 * L.i);
         ctx.fillStyle = 'rgba(255,240,205,' + L.i + ')'; ctx.beginPath(); ctx.arc(x, y, Math.max(2, W / 450), 0, 7); ctx.fill();
-        if (L.c.hub || small && ['London', 'New York', 'Lagos', 'Bangkok', 'São Paulo', 'Riyadh', 'Dar es Salaam', 'Sydney'].indexOf(L.c.n) < 0) return;
+        if (L.c.hub || small && ['London', 'New York', 'Lagos', 'Bangkok', 'São Paulo', 'Riyadh', 'Dar es Salaam', 'Sydney', 'Tokyo'].indexOf(L.c.n) < 0) return;
         ctx.fillStyle = 'rgba(243,227,195,' + 0.92 * L.i + ')';
         var txt = L.c.n.toUpperCase(), off = Math.max(8, W / 110);
         if (L.c.s === 'l') { ctx.textAlign = 'right'; ctx.fillText(txt, x - off, y); }
@@ -118,8 +118,15 @@
         }
       }
       if (counter) {
-        var n = 1 + lights.filter(function (L) { return L.i > 0.5; }).length;
-        if (n !== lastCount) { counter.textContent = n; lastCount = n; }
+        var name = '';
+        if (t < END) { lights.forEach(function (L) { if (L.i > 0.05) name = L.c.n; }); }
+        else {
+          var k = Math.floor((t - END) / 2.4) % order.length, c = P(order[k]), ph = ((t - END) / 2.4) % 1;
+          name = order[k].n;
+          ctx.strokeStyle = 'rgba(232,184,75,' + (0.7 * (1 - ph)) + ')'; ctx.lineWidth = 1.4;
+          ctx.beginPath(); ctx.arc(c[0], c[1], 4 + ph * W / 40, 0, 7); ctx.stroke();
+        }
+        if (name && name !== lastName) { counter.textContent = name; lastName = name; counter.classList.remove('flip'); void counter.offsetWidth; counter.classList.add('flip'); }
       }
       if (!still && visible) requestAnimationFrame(frame);
     }
@@ -130,7 +137,7 @@
       cv.style.transform = 'scale(2.4)';
       setTimeout(function () { cv.style.transition = 'transform 9s cubic-bezier(.22,.61,.36,1)'; cv.style.transform = 'scale(1)'; }, 250);
       if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { es.forEach(function (e) { var was = visible; visible = e.isIntersecting; if (visible && !was) requestAnimationFrame(frame); }); }).observe(cv);
-    } else if (counter) { counter.textContent = M.cities.length; }
+    } else if (counter) { counter.textContent = 'Tokyo'; }
     var redraw = function () { size(); if (still) frame(performance.now()); };
     window.addEventListener('resize', function () { clearTimeout(cv._rt); cv._rt = setTimeout(redraw, 120); });
     if (document.fonts && document.fonts.load) document.fonts.load('600 12px Archivo').then(function () { requestAnimationFrame(frame); });
@@ -317,5 +324,35 @@
     }
     if (reduce) { lines(); return; }
     new IntersectionObserver(function (es) { es.forEach(function (e) { var was = live; live = e.isIntersecting; if (live && !was) requestAnimationFrame(frame); }); }, { threshold: .1 }).observe(neb);
+  });
+})();
+
+/* ---- v7: tour, language showcase, agent feed ---- */
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-tour]').forEach(function (tour) {
+    var tabs = Array.prototype.slice.call(tour.querySelectorAll('.tt')), panes = tour.querySelectorAll('.tpane'), cur = 0, timer = null, seen = false;
+    function show(n, user) {
+      cur = (n + tabs.length) % tabs.length;
+      tabs.forEach(function (t, i) { t.setAttribute('aria-selected', i === cur ? 'true' : 'false'); var p = t.querySelector('.tp'); p.style.animation = 'none'; void p.offsetWidth; p.style.animation = ''; });
+      panes.forEach(function (p, i) { p.classList.toggle('on', i === cur); });
+      if (user) stop();
+    }
+    function start() { if (reduce || timer) return; tour.classList.add('auto'); timer = setInterval(function () { if (!tour.classList.contains('paused')) show(cur + 1); }, 8000); }
+    function stop() { clearInterval(timer); timer = null; tour.classList.remove('auto'); }
+    tabs.forEach(function (t, i) { t.addEventListener('click', function () { show(i, true); }); });
+    tour.addEventListener('mouseenter', function () { tour.classList.add('paused'); });
+    tour.addEventListener('mouseleave', function () { tour.classList.remove('paused'); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && !seen) { seen = true; start(); } }); }, { threshold: .3 }).observe(tour);
+  });
+  document.querySelectorAll('[data-langshow]').forEach(function (ls) {
+    var items = ls.querySelectorAll('.ls-item'), dots = ls.querySelectorAll('.ls-dots i'), i = 0;
+    function on(n) { items.forEach(function (x, k) { x.classList.toggle('on', k === n); }); dots.forEach(function (x, k) { x.classList.toggle('on', k === n); }); }
+    on(0); if (reduce) return;
+    setInterval(function () { i = (i + 1) % items.length; on(i); }, 2600);
+  });
+  document.querySelectorAll('[data-feed]').forEach(function (f) {
+    var ul = f.querySelector('ul'); if (reduce) return;
+    setInterval(function () { var last = ul.lastElementChild; ul.removeChild(last); last.classList.remove('new'); void last.offsetWidth; last.classList.add('new'); ul.insertBefore(last, ul.firstElementChild); }, 2600);
   });
 })();
