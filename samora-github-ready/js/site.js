@@ -393,3 +393,66 @@
     setInterval(function () { s[i].classList.remove('on'); i = (i + 1) % s.length; s[i].classList.add('on'); }, 2200);
   });
 })();
+
+/* ---- v11: site settings. Fill these two in and redeploy. ----
+   clarity:  the project ID from clarity.microsoft.com (Settings, Setup), e.g. 'abcd1234ef'
+   whatsapp: the number people should message, digits only with country code, e.g. '919812345678' */
+var SAMORA_SITE = { clarity: 'zbg325xyli', whatsapp: '917710899399' };
+
+/* sticky dock: Meet SAM and Book a demo, once the hero buttons have scrolled away */
+(function () {
+  var path = location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+  var legal = /^\/(privacy|terms|brand)/.test(path);
+  if (!legal && path !== '/demo') {
+    var d = document.createElement('div');
+    d.className = 'dock';
+    d.innerHTML = '<a class="d-sam" href="' + (path === '/' || path === '/index' ? '#sam' : '/#sam') + '">Meet SAM</a><a class="d-demo" href="/demo">Book a demo</a>';
+    document.body.appendChild(d);
+    var past = false, end = false;
+    function set() { var on = past && !end; d.classList.toggle('on', on); document.body.classList.toggle('dock-on', on); }
+    var anchor = document.querySelector('.hero2 .btns, .hero-sub, main > section');
+    var last = document.querySelector('.foot') || document.querySelector('section.cta');
+    if ('IntersectionObserver' in window && anchor) {
+      new IntersectionObserver(function (es) { past = !es[0].isIntersecting && es[0].boundingClientRect.top < 0; set(); }).observe(anchor);
+      if (last) new IntersectionObserver(function (es) { end = es[0].isIntersecting; set(); }, { threshold: .05 }).observe(last);
+    } else {
+      window.addEventListener('scroll', function () { past = window.scrollY > 480; set(); }, { passive: true });
+    }
+  }
+
+  /* chat on WhatsApp */
+  var n = (SAMORA_SITE.whatsapp || '').replace(/\D/g, '');
+  if (n && !legal) {
+    var a = document.createElement('a');
+    a.className = 'wa'; a.target = '_blank'; a.rel = 'noopener';
+    a.href = 'https://wa.me/' + n + '?text=' + encodeURIComponent('Hi Samora, I was on your website and would like to know more about SamoraOS.');
+    a.setAttribute('aria-label', 'Chat with Samora on WhatsApp');
+    a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.84 9.84 0 0 0 12.04 2Zm0 1.67c2.2 0 4.27.86 5.82 2.42a8.2 8.2 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24Zm-3.52 4.4c-.17 0-.43.06-.66.31-.22.25-.87.85-.87 2.07s.89 2.4 1.01 2.56c.13.17 1.76 2.67 4.25 3.74.59.26 1.05.41 1.41.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.17-.48-.29-.25-.13-1.47-.73-1.7-.81-.23-.08-.39-.12-.56.12-.16.25-.64.81-.78.97-.15.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.31-.02-.43-.06-.13-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48Z"/></svg><span>Chat on WhatsApp</span>';
+    document.body.appendChild(a);
+  }
+
+  /* Microsoft Clarity: heatmaps and session replays. Visitors on European time zones are asked first. */
+  var id = SAMORA_SITE.clarity;
+  if (id && !/^(localhost|127\.)/.test(location.hostname)) {
+    (function (c, l, a, r, i, t, y) { c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); }; t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i; y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y); })(window, document, 'clarity', 'script', id);
+    var tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+    var eu = /^(Europe|Atlantic\/(Canary|Madeira|Azores|Reykjavik|Faroe))/.test(tz);
+    var saved = null; try { saved = localStorage.getItem('samora-consent'); } catch (e) {}
+    function signal(ok) { window.clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: ok ? 'granted' : 'denied' }); }
+    if (!eu) signal(true);
+    else if (saved) signal(saved === 'yes');
+    else {
+      signal(false);
+      var c = document.createElement('div');
+      c.className = 'consent'; c.setAttribute('role', 'dialog'); c.setAttribute('aria-label', 'Cookies');
+      c.innerHTML = 'We use analytics cookies to see how this site is used and make it better. No advertising.<div><button class="y" type="button">Allow</button><button type="button">No thanks</button></div>';
+      document.body.appendChild(c);
+      c.addEventListener('click', function (e) {
+        if (e.target.tagName !== 'BUTTON') return;
+        var ok = e.target.className === 'y';
+        try { localStorage.setItem('samora-consent', ok ? 'yes' : 'no'); } catch (x) {}
+        signal(ok); c.remove();
+      });
+    }
+  }
+})();
