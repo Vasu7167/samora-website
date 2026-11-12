@@ -456,3 +456,27 @@ var SAMORA_SITE = { clarity: 'zbg325xyli', whatsapp: '917710899399' };
     }
   }
 })();
+
+/* ---- v13: Samora Growth Compass ---- */
+(function () {
+  document.querySelectorAll('[data-compass]').forEach(function (g) {
+    var cells = g.querySelectorAll('[data-q]'), panels = g.querySelectorAll('[data-p]');
+    var order = ['dom', 'exp', 'xs', 'lau'], i = 0, timer = null;
+    function set(k) {
+      cells.forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-q') === k); c.setAttribute('aria-pressed', c.getAttribute('data-q') === k ? 'true' : 'false'); });
+      panels.forEach(function (p) { p.classList.toggle('on', p.getAttribute('data-p') === k); });
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    cells.forEach(function (c) {
+      c.addEventListener('click', function () { stop(); set(c.getAttribute('data-q')); });
+      c.addEventListener('mouseenter', function () { stop(); set(c.getAttribute('data-q')); });
+    });
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (es) {
+      if (es[0].isIntersecting && !timer && i >= 0) {
+        timer = setInterval(function () { i = (i + 1) % order.length; set(order[i]); }, 3600);
+      } else if (!es[0].isIntersecting) stop();
+    }, { threshold: .4 }).observe(g);
+  });
+})();
