@@ -480,3 +480,23 @@ var SAMORA_SITE = { clarity: 'zbg325xyli', whatsapp: '917710899399' };
     }, { threshold: .4 }).observe(g);
   });
 })();
+
+/* ---- v14: counters on the SAM console ---- */
+(function () {
+  document.querySelectorAll('[data-count]').forEach(function (box) {
+    var nums = box.querySelectorAll('[data-to]');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function fmt(n) { return n.toLocaleString('en-US'); }
+    function run() {
+      nums.forEach(function (el) {
+        var to = +el.getAttribute('data-to'), t0 = null, dur = 2200;
+        if (reduce) { el.textContent = fmt(to); return; }
+        function step(t) { if (!t0) t0 = t; var p = Math.min(1, (t - t0) / dur); el.textContent = fmt(Math.round(to * (1 - Math.pow(1 - p, 3)))); if (p < 1) requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+      });
+    }
+    if (!('IntersectionObserver' in window)) return run();
+    var seen = false;
+    new IntersectionObserver(function (es) { if (es[0].isIntersecting && !seen) { seen = true; run(); } }, { threshold: .3 }).observe(box);
+  });
+})();
